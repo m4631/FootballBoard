@@ -1,3 +1,5 @@
+package Vistas;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -50,12 +52,12 @@ public class Menu extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		BufferedImage imagen = ImageIO.read(new File("C:\\Users\\Brandon m\\Desktop\\Java\\FinalTecnicas\\src\\noun_2034_cc.png"));
+		/*BufferedImage imagen = ImageIO.read(new File("C:\\Users\\Brandon m\\Desktop\\Java\\FinalTecnicas\\src\\noun_2034_cc.png"));
 		
 		
 		JLabel lblNewLabel = new JLabel(new ImageIcon(imagen));
 		lblNewLabel.setBounds(39, 11, 451, 102);
-		contentPane.add(lblNewLabel);
+		contentPane.add(lblNewLabel);*/
 		
 		JButton btnEquipos = new JButton("Equipos");
 		btnEquipos.addActionListener(new ActionListener() {
