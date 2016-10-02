@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  */
 import javax.swing.JOptionPane;
 public class Archivos {
-    File juegos;
+    public static ArrayList<String> jugadores;
     String stringFolder = System.getProperty("user.dir") + "\\Archivos";
     String stringJuegos = stringFolder + "\\Juegos.csv";
     String stringEquipos = stringFolder + "\\Equipos.csv";
@@ -33,6 +34,9 @@ public class Archivos {
     archivoJugadas();
     archivoEquipos();
     archivoJugadores();
+    
+    cargarJugadores();
+    Equipo e = new Equipo("Zazafras");
     
 
     
@@ -84,7 +88,7 @@ public class Archivos {
     {
         
         try(FileWriter Juegos = new FileWriter(stringEquipos)) { 
-            Juegos.append("Nombre");
+            Juegos.append("Nombre,Cant. Jugadores");
             Juegos.flush();
             System.out.println("Archivo Equipos creado");
             Juegos.close();
@@ -145,5 +149,27 @@ public class Archivos {
     }
         
     }
+    
+   public  void  cargarJugadores(){
+       
+       jugadores = new ArrayList<>();
+       
+       try(BufferedReader lector = new BufferedReader(new FileReader(stringJugadores)))
+       {
+           String linea = "";
+           
+           //Leo el encabezado del archivo
+           lector.readLine();
+           while((linea = lector.readLine()) != null){
+               jugadores.add(linea);
+           }
+       
+       } 
+       catch (IOException ex) {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+       
+   }
     
 }
