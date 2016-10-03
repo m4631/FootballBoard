@@ -12,13 +12,8 @@ public class JavaFootBallBoard {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Menu menu;
-        try {
-            menu = new Menu();
-            menu.setVisible(true);
-        } catch (IOException ex) {
-            Logger.getLogger(JavaFootBallBoard.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Menu menu = new Menu();
+        menu.setVisible(true);
     }
     
 }
