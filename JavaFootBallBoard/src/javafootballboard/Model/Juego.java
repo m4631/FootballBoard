@@ -12,8 +12,8 @@ package javafootballboard.Model;
 public class Juego {
    String cod;
    String titulo;
-   String equipoA;
-   String equipoB;
+   Equipo equipoA;
+   Equipo equipoB;
    String estadio;
    String ciudad;
    String fecha;
@@ -25,22 +25,17 @@ public class Juego {
    
    public Juego(){
        
-   }
+   }  
    
-   public Juego(String equipoA, String equipoB, String estadio, String fecha,String arbitro, String ciudad){
+   public Juego(Equipo equipoA, Equipo equipoB, String estadio, String fecha,String arbitro, String ciudad){
        this.estadio = estadio;
        this.ciudad = ciudad;
        this.arbitro = arbitro;
        this.fecha = fecha;
        this.equipoA = equipoA;
        this.equipoB = equipoB;
-       setTitulo(equipoA,equipoB);
-       setCod(); 
-       
-   }
-   
-   private void setTitulo(String equipoA, String equipoB){
-       this.titulo = equipoA +" vs "+ equipoB;
+       setTitulo();
+       setCod();        
    }
    
     private void setCod(){
@@ -58,7 +53,15 @@ public class Juego {
    }
     public void setCiudad(String ciudad){
        this.ciudad = ciudad;
-   }   
+   }
+    
+    public void setEquipoA(Equipo equipoA){
+       this.equipoA = equipoA;
+   } 
+    
+    public void setEquipoB(Equipo equipoB){
+       this.equipoB = equipoB;
+   } 
     public void setPuntosA(int puntosA){
        this.puntosA = puntosA;
    }
@@ -105,27 +108,23 @@ public class Juego {
 
     public void setHoraFin(String horaFin) {
         this.horaFin = horaFin;
-    }
-
-    public String getEquipoA() {
-        return equipoA;
-    }
-
-    public void setEquipoA(String equipoA) {
-        this.equipoA = equipoA;
-    }
-
-    public String getEquipoB() {
-        return equipoB;
-    }
-
-    public void setEquipoB(String equipoB) {
-        this.equipoB = equipoB;
-    }
-    
+    }  
         
     public void setTitulo(){
-        this.titulo = this.equipoA+" vs "+this.equipoB;
+        this.titulo = this.equipoA.getNombre()+" vs "+this.equipoB.getNombre();
     }
-    
+
+     public Equipo GetEquipoA(){
+       return equipoA;
+   } 
+     public Equipo GetEquipoB(){
+       return equipoB;
+   } 
+     
+   public void SetEquipoA(Equipo equipoA){
+       this.equipoA = equipoA;
+   } 
+     public void SetEquipoB(Equipo equipoB){
+       this.equipoB = equipoB;
+   } 
 }

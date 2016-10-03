@@ -234,8 +234,8 @@ public class Subir extends javax.swing.JFrame {
         juego.setPuntosA(Integer.parseInt(jPuntajeA.getText()));
         juego.setPuntosB(Integer.parseInt(jPuntajeB.getText()));
         juego.setFecha(fecha);
-        juego.setEquipoA(equipoA.getNombre());
-        juego.setEquipoB(equipoB.getNombre());
+        juego.setEquipoA(equipoA);
+        juego.setEquipoB(equipoB);
         juego.setTitulo();
     }
     
@@ -252,15 +252,15 @@ public class Subir extends javax.swing.JFrame {
         partidos[0].setFecha("3/10/2016");
         partidos[0].setPuntosA(10);
         partidos[0].setPuntosB(4);
-        partidos[0].setEquipoA("Levitadores");
-        partidos[0].setEquipoB("Los retirados");
+        partidos[0].setEquipoA(equipoA);
+        partidos[0].setEquipoB(equipoB);
         partidos[0].setTitulo();
         
         partidos[1].setFecha("2/10/2016");
         partidos[1].setPuntosA(8);
         partidos[1].setPuntosB(10);
-        partidos[1].setEquipoA("Perencejos");
-        partidos[1].setEquipoB("Los Mamberos");
+        partidos[1].setEquipoA(equipoB);
+        partidos[1].setEquipoB(equipoA);
         partidos[1].setTitulo();
         
         for(int i=0;i<partidos.length ;i++){
@@ -532,6 +532,11 @@ public class Subir extends javax.swing.JFrame {
         });
 
         jButton1.setText("Añadir equipo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Añadir equipo");
 
@@ -1576,6 +1581,11 @@ public class Subir extends javax.swing.JFrame {
     private void jComboEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEquipoActionPerformed
         cargarComboBoxJugadores();
     }//GEN-LAST:event_jComboEquipoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     /**
      * @param args the command line arguments
