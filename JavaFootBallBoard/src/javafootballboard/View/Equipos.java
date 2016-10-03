@@ -105,6 +105,11 @@ public class Equipos extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton3.setText("Cancelar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Guardar equipo");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -378,6 +383,12 @@ public class Equipos extends javax.swing.JFrame {
             nombreEquipo.setText("Nombre del equipo");
         }
     }//GEN-LAST:event_nombreEquipoMouseExited
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     public void setManualText(String s, Boolean b){
         manualMessage.setVisible(false);
