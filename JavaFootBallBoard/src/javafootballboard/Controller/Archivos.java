@@ -11,7 +11,7 @@ import javafootballboard.Model.Equipo;
 
 import javax.swing.JOptionPane;
 public class Archivos {
-    public static ArrayList<String> jugadores;
+    public static ArrayList<String> jugadores = new ArrayList<String>();
     private final String stringFolder = System.getProperty("user.dir") + "\\Archivos";
     private final String stringJuegos = stringFolder + "\\Juegos.csv";
     private final String stringEquipos = stringFolder + "\\Equipos.csv";
