@@ -25,6 +25,14 @@ public class Equipo {
         this.jugadores = new ArrayList<>();
         cargarJugadores();
     }
+  
+    public void setNombre(String nombre){
+       this.nombre = nombre;
+   }
+    
+    public String getNombre(){
+       return nombre;
+   }
    
    public void agregarJugador(Jugador jugador){
        if(jugadores.size() < MAX_JUGADORES){

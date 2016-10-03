@@ -8,10 +8,15 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafootballboard.Model.Equipo;
+import javafootballboard.Model.Jugador;
 
 import javax.swing.JOptionPane;
 public class Archivos {
-    public static ArrayList<String> jugadores = new ArrayList<String>();
+    public static ArrayList<String> juegos;
+    public static ArrayList<String> equipos;
+    public static ArrayList<String> jugadores;
+    public static ArrayList<String> jugadas;
+    
     private final String stringFolder = System.getProperty("user.dir") + "\\Archivos";
     private final String stringJuegos = stringFolder + "\\Juegos.csv";
     private final String stringEquipos = stringFolder + "\\Equipos.csv";
@@ -26,8 +31,12 @@ public class Archivos {
         archivoJugadas();
         archivoEquipos();
         archivoJugadores();
+        
+        cargarJuegos();
+        cargarEquipos();
         cargarJugadores();
-        Equipo e = new Equipo("Zazafras");
+        cargarJugadas();
+        
     }
     
     private void carpeta(){
@@ -126,7 +135,7 @@ public class Archivos {
         }
     }
     
-    public  void  cargarJugadores(){
+    private  void  cargarJugadores(){
         jugadores = new ArrayList<>();
        
         try(BufferedReader lector = new BufferedReader(new FileReader(stringJugadores)))
@@ -141,5 +150,173 @@ public class Archivos {
         {
             Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void  cargarJuegos(){
+        juegos = new ArrayList<>();
+       
+        try(BufferedReader lector = new BufferedReader(new FileReader(stringJuegos)))
+        {
+            String linea = "";
+            lector.readLine(); //Leo el encabezado del archivo
+            while((linea = lector.readLine()) != null){
+                juegos.add(linea);
+            }
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
+    private void  cargarEquipos(){
+        equipos = new ArrayList<>();
+       
+        try(BufferedReader lector = new BufferedReader(new FileReader(stringEquipos)))
+        {
+            String linea = "";
+            lector.readLine(); //Leo el encabezado del archivo
+            while((linea = lector.readLine()) != null){
+                equipos.add(linea);
+            }
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private  void  cargarJugadas(){
+        jugadas = new ArrayList<>();
+       
+        try(BufferedReader lector = new BufferedReader(new FileReader(stringJugadas)))
+        {
+            String linea = "";
+            lector.readLine(); //Leo el encabezado del archivo
+            while((linea = lector.readLine()) != null){
+                jugadas.add(linea);
+            }
+        } 
+        catch (IOException ex) 
+        {
+            Logger.getLogger(Archivos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    public void actJuegos() throws IOException{
+        if(Files.exists(Paths.get(stringJuegos)))
+        {
+            try 
+            { 
+                File Juegos = new File(stringJuegos);   
+                Juegos.delete();
+                archivoJuegos();
+                FileWriter actJuegos = new FileWriter(stringJuegos); 
+                
+            for (String linea : juegos) {
+                actJuegos.append(linea);
+                actJuegos.flush();
+            }
+                
+            actJuegos.close();
+               
+            }
+            catch(SecurityException se){
+                JOptionPane.showMessageDialog(null,"No se tiene los permisos necesarios para proceder");
+            }
+        }
+        else
+        {
+            System.out.println("Actualizado el archivo " + stringJuegos);
+        }
+        
+    }
+    
+    public void actEquipos() throws IOException{
+        if(Files.exists(Paths.get(stringEquipos)))
+        {
+            try 
+            { 
+                File Equipos = new File(stringEquipos);   
+                Equipos.delete();
+                archivoEquipos();
+                FileWriter actEquipos = new FileWriter(stringEquipos); 
+                
+            for (String linea : equipos) {
+                actEquipos.append(linea);
+                actEquipos.flush();
+            }
+                
+            actEquipos.close();
+               
+            }
+            catch(SecurityException se){
+                JOptionPane.showMessageDialog(null,"No se tiene los permisos necesarios para proceder");
+            }
+        }
+        else
+        {
+            System.out.println("Actualizado el archivo " + stringEquipos);
+        }
+        
+    }
+    
+    public void actJugadores() throws IOException{
+        if(Files.exists(Paths.get(stringJugadores)))
+        {
+            try 
+            { 
+                File Jugadores = new File(stringJugadores);   
+                Jugadores.delete();
+                archivoJugadores();
+                FileWriter actJugadores = new FileWriter(stringJugadores); 
+                
+            for (String linea : jugadores) {
+                actJugadores.append(linea);
+                actJugadores.flush();
+            }
+                
+            actJugadores.close();
+               
+            }
+            catch(SecurityException se){
+                JOptionPane.showMessageDialog(null,"No se tiene los permisos necesarios para proceder");
+            }
+        }
+        else
+        {
+            System.out.println("Actualizado el archivo " + stringJugadores);
+        }
+        
+    }
+    
+     public void actJugadas() throws IOException{
+        if(Files.exists(Paths.get(stringJugadas)))
+        {
+            try 
+            { 
+                File Jugadas = new File(stringJugadas);   
+                Jugadas.delete();
+                archivoJugadas();
+                FileWriter actJugadas = new FileWriter(stringJugadas); 
+                
+            for (String linea : jugadas) {
+                actJugadas.append(linea);
+                actJugadas.flush();
+            }
+                
+            actJugadas.close();
+               
+            }
+            catch(SecurityException se){
+                JOptionPane.showMessageDialog(null,"No se tiene los permisos necesarios para proceder");
+            }
+        }
+        else
+        {
+            System.out.println("Actualizado el archivo " + stringJugadas);
+        }
+        
     }
 }
