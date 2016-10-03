@@ -16,21 +16,25 @@ public class Juego {
    String ciudad;
    String fecha;
    String arbitro;
+   Equipo equipoA;
+   Equipo equipoB;
    int puntosA;
    int puntosB;
    
-   public Juego(String equipoA, String equipoB, String estadio, String fecha,String arbitro, String ciudad){
+   public Juego(Equipo equipoA, Equipo equipoB, String estadio, String fecha,String arbitro, String ciudad){
        this.estadio = estadio;
        this.ciudad = ciudad;
        this.arbitro = arbitro;
        this.fecha = fecha;
-       setTitulo(equipoA,equipoB);
+       this.equipoA = equipoA;
+       this.equipoB = equipoB;
+       setTitulo();
        setCod(); 
        
    }
    
-   private void setTitulo(String equipoA, String equipoB){
-       this.titulo = equipoA +" vs "+ equipoB;
+   private void setTitulo(){
+       this.titulo = equipoA.getNombre() +" vs "+ equipoB.getNombre();
    }
    
     private void setCod(){
@@ -48,7 +52,15 @@ public class Juego {
    }
     public void setCiudad(String ciudad){
        this.ciudad = ciudad;
-   }   
+   }
+    
+    public void setEquipoA(Equipo equipoA){
+       this.equipoA = equipoA;
+   } 
+    
+    public void setEquipoB(Equipo equipoB){
+       this.equipoB = equipoB;
+   } 
     public void setPuntosA(int puntosA){
        this.puntosA = puntosA;
    }
@@ -80,4 +92,10 @@ public class Juego {
     public String getCod(){
        return cod;
    }
+     public Equipo GetEquipoA(){
+       return equipoA;
+   } 
+     public Equipo GetEquipoB(){
+       return equipoB;
+   } 
 }
