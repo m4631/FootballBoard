@@ -5,7 +5,11 @@
  */
 package javafootballboard.View;
 
+import java.util.ArrayList;
 import java.util.Date;
+import javafootballboard.Model.Equipo;
+import javafootballboard.Model.Juego;
+import javafootballboard.Model.Jugador;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.UIManager;
@@ -20,15 +24,17 @@ public class Subir extends javax.swing.JFrame {
     /**
      * Creates new form Subir
      */
-    String equipoA;
-    String equipoB;
+    Juego juego;
+    
+    Equipo equipoA;
+    Equipo equipoB;
     
     String fecha;
     String horaInicio;
     String horaFin;
     
-    String[] equipos; // Referencia al arreglo de partidos de Menu
-    String[] partidos; //Referencia al arreglo de partidos de Menu
+    Equipo[] equipos; // Referencia al arreglo de partidos de Menu
+    Juego[] partidos; //Referencia al arreglo de partidos de Menu
     String[] jugadas; // Referencia a template de jugadas
     String[] columnas; // columnas de la tabla partidos
     
@@ -56,7 +62,7 @@ public class Subir extends javax.swing.JFrame {
         jTablePartidos.setAutoCreateRowSorter(true);// Permite sorting en tabla
         
         //Deshabilitando componentes
-        //deshabilitarTabs();
+        deshabilitarTabs();
         jSiguienteA.setEnabled(false);
         jSiguienteB.setEnabled(false);
         jSiguienteC.setEnabled(false);
@@ -67,8 +73,8 @@ public class Subir extends javax.swing.JFrame {
     
     //================================CODIGO TAB EQUIPO==================================================
     public void inicializarCamposA(){
-        equipoA = "";
-        equipoB = "";
+        equipoA = new Equipo();
+        equipoB = new Equipo();
         horaInicio="";
         horaFin="";
         fecha="";
@@ -76,7 +82,19 @@ public class Subir extends javax.swing.JFrame {
     
     //Consigue el arreglo de equipos desde Menu
     public void cargarArreglos(){
-        equipos = new String[]{"EquipoA","EquipoB","EquipoC"};
+        equipos = new Equipo[]{new Equipo(), new Equipo(), new Equipo()};
+        
+        equipos[0].setNombre("Real Madrid");
+        equipos[0].agregarJugador(new Jugador("Raul","Perez","Delantero"));
+        equipos[0].agregarJugador(new Jugador("Manuel","Castillo","Delantero"));
+        
+        equipos[1].setNombre("El barca");
+        equipos[1].agregarJugador(new Jugador("Miguel","Arias","Delantero"));
+        equipos[1].agregarJugador(new Jugador("Ramon","Castillo","Defensa"));
+        
+        equipos[2].setNombre("FC Brasil");
+        equipos[2].agregarJugador(new Jugador("Aurelion","Sol","Medio campo"));
+        equipos[2].agregarJugador(new Jugador("Guillermo","Mendez","Delantero"));
     }
     
     // Deshabilita inicialmente los tabs juego, jugada y guardar
@@ -93,7 +111,7 @@ public class Subir extends javax.swing.JFrame {
     
     public boolean comprobarEquipos(){
         // Comprueba que se han seleccionado ambos equipos
-        if(equipoA.equals("") || equipoB.equals("")){
+        if(equipoA.getNombre().equals("")|| equipoB.getNombre().equals("")){
             mostrarErrorA(1);
             return false;
         }
@@ -145,8 +163,8 @@ public class Subir extends javax.swing.JFrame {
     public void cargarComboBox(int i){
         modeloA = new DefaultComboBoxModel();   
         modeloA.addElement("Seleccionar equipo...");
-        for(String s: equipos){
-            modeloA.addElement(s);
+        for(Equipo e: equipos){
+            modeloA.addElement(e.getNombre());
         }
         if(i>0){
             jComboEquipoA.setModel(modeloA);
@@ -210,7 +228,15 @@ public class Subir extends javax.swing.JFrame {
     
     //Asigna los valores al objeto Partido...
     public void asignarCampos(){
-        // Crear objeto partido y asignarle los campos...
+        juego = new Juego();
+        juego.setArbitro(jArbitro.getText());
+        juego.setCiudad(jLugar.getText());
+        juego.setPuntosA(Integer.parseInt(jPuntajeA.getText()));
+        juego.setPuntosB(Integer.parseInt(jPuntajeB.getText()));
+        juego.setFecha(fecha);
+        juego.setEquipoA(equipoA);
+        juego.setEquipoB(equipoB);
+        juego.setTitulo();
     }
     
     public void iniciarTabla(){
@@ -221,19 +247,27 @@ public class Subir extends javax.swing.JFrame {
     }
     
     public void cargarTabla(){
-        partidos = new String[]{"Partido 1","Partido 2","Partido 3"};
+        partidos = new Juego[]{new Juego(), new Juego()};
+        
+        partidos[0].setFecha("3/10/2016");
+        partidos[0].setPuntosA(10);
+        partidos[0].setPuntosB(4);
+        partidos[0].setEquipoA(equipoA);
+        partidos[0].setEquipoB(equipoB);
+        partidos[0].setTitulo();
+        
+        partidos[1].setFecha("2/10/2016");
+        partidos[1].setPuntosA(8);
+        partidos[1].setPuntosB(10);
+        partidos[1].setEquipoA(equipoB);
+        partidos[1].setEquipoB(equipoA);
+        partidos[1].setTitulo();
         
         for(int i=0;i<partidos.length ;i++){
             modeloB.insertRow(i, new Object[]{});
-            modeloB.setValueAt(partidos[i], i, 0);
-            modeloB.setValueAt(partidos[i], i, 1);
-            modeloB.setValueAt(partidos[i], i, 2);
-            
-            /*
-            modeloB.setValueAt(partidos[i].titulo, i, 0);
-            modeloB.setValueAt(partidos[i].scoreA+" - "+partidos[i].scoreB, i, 1);
-            modeloB.setValueAt(partidos[i].fecha, i, 2);
-            */
+            modeloB.setValueAt(partidos[i].getTitulo(), i, 0);
+            modeloB.setValueAt(partidos[i].getPuntosA()+" - "+partidos[i].getPuntosB(), i, 1);
+            modeloB.setValueAt(partidos[i].getFecha(), i, 2);
         }
     }
     //==================================CODIGO TAB JUGADAS=============================
@@ -256,27 +290,30 @@ public class Subir extends javax.swing.JFrame {
     }
     public void cargarComboBoxEquipos(){
         modeloA = new DefaultComboBoxModel();   
-        modeloA.addElement(equipoA);
-        modeloA.addElement(equipoB);
+        modeloA.addElement(equipoA.getNombre());
+        modeloA.addElement(equipoB.getNombre());
         jComboEquipo.setModel(modeloA);
     }
     
     public void cargarComboBoxJugadores(){
         modeloA = new DefaultComboBoxModel();   
         int n = jComboEquipo.getSelectedIndex();
-        /*
+        Equipo team;
+        
         if(n>0){
             team = equipoA;
         }else{
             team = equipoB;
         }
         
-        for(Jugador j: team.getJugadores()){
-            modeloA.addElement(j.nombre+" "+j.apellido);
+        ArrayList<Jugador> players = team.getJugadores();
+        
+        for(Jugador j: players ){
+            modeloA.addElement(j.getNombre()+" "+j.getApellido()+" ["+j.getPosicion()+"]");
         }
         
-       jComboJugadores.setModel(modeloA);
-        */
+       jComboJugador.setModel(modeloA);
+        
     }
     
     public void cargarComboBoxJugadas(){
@@ -993,6 +1030,11 @@ public class Subir extends javax.swing.JFrame {
         jLabel27.setText("Tiempo de la jugada:");
 
         jComboEquipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboEquipoActionPerformed(evt);
+            }
+        });
 
         jComboJugador.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -1064,7 +1106,7 @@ public class Subir extends javax.swing.JFrame {
                             .addComponent(jFinPartido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jAgregarJugada, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1152,9 +1194,9 @@ public class Subir extends javax.swing.JFrame {
                         .addComponent(jButton14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSiguienteC)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1174,7 +1216,7 @@ public class Subir extends javax.swing.JFrame {
                                     .addComponent(jLimpiarJugadas)
                                     .addComponent(jEliminarJugada)))
                             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1397,14 +1439,14 @@ public class Subir extends javax.swing.JFrame {
 
     private void jComboEquipoAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEquipoAActionPerformed
         if(jComboEquipoA.getSelectedIndex()>0){
-             equipoA = jComboEquipoA.getSelectedItem().toString();
+             equipoA =  equipos[jComboEquipoA.getSelectedIndex()-1];
         }
         activarBotonA();
     }//GEN-LAST:event_jComboEquipoAActionPerformed
 
     private void jComboEquipoBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEquipoBActionPerformed
         if(jComboEquipoB.getSelectedIndex()>0){
-             equipoB = jComboEquipoB.getSelectedItem().toString();
+             equipoB =  equipos[jComboEquipoB.getSelectedIndex()-1];
         }
         activarBotonA();
     }//GEN-LAST:event_jComboEquipoBActionPerformed
@@ -1536,9 +1578,14 @@ public class Subir extends javax.swing.JFrame {
      }
     }//GEN-LAST:event_jFinPartidoActionPerformed
 
+    private void jComboEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEquipoActionPerformed
+        cargarComboBoxJugadores();
+    }//GEN-LAST:event_jComboEquipoActionPerformed
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
 
     /**
      * @param args the command line arguments

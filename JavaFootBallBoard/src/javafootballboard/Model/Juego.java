@@ -12,14 +12,20 @@ package javafootballboard.Model;
 public class Juego {
    String cod;
    String titulo;
+   Equipo equipoA;
+   Equipo equipoB;
    String estadio;
    String ciudad;
    String fecha;
    String arbitro;
-   Equipo equipoA;
-   Equipo equipoB;
+   String horaInicio;
+   String horaFin;
    int puntosA;
    int puntosB;
+   
+   public Juego(){
+       
+   }  
    
    public Juego(Equipo equipoA, Equipo equipoB, String estadio, String fecha,String arbitro, String ciudad){
        this.estadio = estadio;
@@ -29,12 +35,7 @@ public class Juego {
        this.equipoA = equipoA;
        this.equipoB = equipoB;
        setTitulo();
-       setCod(); 
-       
-   }
-   
-   private void setTitulo(){
-       this.titulo = equipoA.getNombre() +" vs "+ equipoB.getNombre();
+       setCod();        
    }
    
     private void setCod(){
@@ -92,10 +93,38 @@ public class Juego {
     public String getCod(){
        return cod;
    }
+
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }  
+        
+    public void setTitulo(){
+        this.titulo = this.equipoA.getNombre()+" vs "+this.equipoB.getNombre();
+    }
+
      public Equipo GetEquipoA(){
        return equipoA;
    } 
      public Equipo GetEquipoB(){
        return equipoB;
+   } 
+     
+   public void SetEquipoA(Equipo equipoA){
+       this.equipoA = equipoA;
+   } 
+     public void SetEquipoB(Equipo equipoB){
+       this.equipoB = equipoB;
    } 
 }

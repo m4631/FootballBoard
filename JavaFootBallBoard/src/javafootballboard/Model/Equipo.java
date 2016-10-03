@@ -18,12 +18,17 @@ import javax.swing.JOptionPane;
 public class Equipo {
     ArrayList<Jugador> jugadores; 
     int MAX_JUGADORES = 5; 
-    String nombre; 
-   
+    String nombre;
+    
+    public Equipo(){
+        this.nombre = "";
+        this.jugadores = new ArrayList<>();
+    }
+    
     public Equipo(String nombre){
         this.nombre = nombre; 
         this.jugadores = new ArrayList<>();
-        cargarJugadores();
+        //cargarJugadores();
     }
   
     public void setNombre(String nombre){
@@ -37,6 +42,7 @@ public class Equipo {
    public void agregarJugador(Jugador jugador){
        if(jugadores.size() < MAX_JUGADORES){
            jugador.setEquipo(this.nombre);
+           jugadores.add(jugador);
        }
        else{
            JOptionPane.showMessageDialog(null, "Este equipo no puede tener mas jugadores");
@@ -54,6 +60,17 @@ public class Equipo {
            }
        }
     }
+
+    public ArrayList<Jugador> getJugadores() {
+        return jugadores;
+    }
+
+    public void setJugadores(ArrayList<Jugador> jugadores) {
+        this.jugadores = jugadores;
+    }
+
+   
+   
 }
    
    
