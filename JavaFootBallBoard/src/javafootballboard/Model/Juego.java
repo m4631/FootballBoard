@@ -12,18 +12,28 @@ package javafootballboard.Model;
 public class Juego {
    String cod;
    String titulo;
+   String equipoA;
+   String equipoB;
    String estadio;
    String ciudad;
    String fecha;
    String arbitro;
+   String horaInicio;
+   String horaFin;
    int puntosA;
    int puntosB;
+   
+   public Juego(){
+       
+   }
    
    public Juego(String equipoA, String equipoB, String estadio, String fecha,String arbitro, String ciudad){
        this.estadio = estadio;
        this.ciudad = ciudad;
        this.arbitro = arbitro;
        this.fecha = fecha;
+       this.equipoA = equipoA;
+       this.equipoB = equipoB;
        setTitulo(equipoA,equipoB);
        setCod(); 
        
@@ -80,4 +90,42 @@ public class Juego {
     public String getCod(){
        return cod;
    }
+
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }
+
+    public String getEquipoA() {
+        return equipoA;
+    }
+
+    public void setEquipoA(String equipoA) {
+        this.equipoA = equipoA;
+    }
+
+    public String getEquipoB() {
+        return equipoB;
+    }
+
+    public void setEquipoB(String equipoB) {
+        this.equipoB = equipoB;
+    }
+    
+        
+    public void setTitulo(){
+        this.titulo = this.equipoA+" vs "+this.equipoB;
+    }
+    
 }
