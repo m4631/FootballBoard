@@ -26,6 +26,11 @@ public class Archivos {
     Path rutaFolder = Paths.get(stringFolder);
     
     public Archivos(){
+        juegos = new ArrayList<>();
+        equipos = new ArrayList<>();
+        jugadores = new ArrayList<>();
+        jugadas = new ArrayList<>();
+        
         carpeta();
         archivoJuegos();
         archivoJugadas();
@@ -136,7 +141,7 @@ public class Archivos {
     }
     
     private  void  cargarJugadores(){
-        jugadores = new ArrayList<>();
+        
        
         try(BufferedReader lector = new BufferedReader(new FileReader(stringJugadores)))
         {
@@ -153,7 +158,7 @@ public class Archivos {
     }
     
     private void  cargarJuegos(){
-        juegos = new ArrayList<>();
+        
        
         try(BufferedReader lector = new BufferedReader(new FileReader(stringJuegos)))
         {
@@ -170,7 +175,7 @@ public class Archivos {
     }
      
     private void  cargarEquipos(){
-        equipos = new ArrayList<>();
+        
        
         try(BufferedReader lector = new BufferedReader(new FileReader(stringEquipos)))
         {
@@ -187,7 +192,7 @@ public class Archivos {
     }
     
     private  void  cargarJugadas(){
-        jugadas = new ArrayList<>();
+        
        
         try(BufferedReader lector = new BufferedReader(new FileReader(stringJugadas)))
         {
