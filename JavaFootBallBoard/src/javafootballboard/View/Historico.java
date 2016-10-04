@@ -65,8 +65,7 @@ public class Historico extends javax.swing.JFrame {
             }
         });
         tablaJuegos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tablaJuegos.setColumnSelectionAllowed(true);
-        tablaJuegos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tablaJuegos.setCellSelectionEnabled(false);
         jScrollPane2.setViewportView(tablaJuegos);
         tablaJuegos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
