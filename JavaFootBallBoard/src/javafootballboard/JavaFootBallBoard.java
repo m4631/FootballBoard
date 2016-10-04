@@ -13,8 +13,7 @@ public class JavaFootBallBoard {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Menu menu;
-        Archivos archivos;
+
         try {
             menu = new Menu();
             menu.setVisible(true);
@@ -22,6 +21,7 @@ public class JavaFootBallBoard {
         } catch (IOException ex) {
             Logger.getLogger(JavaFootBallBoard.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
     
 }
