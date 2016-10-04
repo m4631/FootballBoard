@@ -12,6 +12,7 @@ import javafootballboard.Model.Juego;
 import javafootballboard.Model.Jugador;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -412,7 +413,21 @@ public class Subir extends javax.swing.JFrame {
         jLHoraFin.setText(juego.getHoraFin());
         jLEstadio.setText(juego.getEstadio());
     }
-    
+
+    public boolean terminarProceso(){
+        
+        // Guardar partido en los archivos
+        // Cargar nuevamente los arreglos de menu
+        
+        if(true){
+            JOptionPane.showConfirmDialog(this, "Partido guardado correctamente");
+            return true;
+        }else{
+            JOptionPane.showConfirmDialog(this, "Ha ocurrido un error al momento de guardar");
+            return false;
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1575,6 +1590,9 @@ public class Subir extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        if(terminarProceso()){
+            this.dispose();
+        }
         // TERMINAR EL PROCESO
         //GUARDAR EL PARTIDO EN LA BD...
     }//GEN-LAST:event_jButton15ActionPerformed

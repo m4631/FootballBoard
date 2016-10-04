@@ -57,7 +57,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(330, 160, 140, 40);
+        jButton5.setBounds(330, 170, 140, 30);
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("Iniciar");
@@ -67,7 +67,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(330, 200, 140, 40);
+        jButton1.setBounds(330, 210, 140, 30);
 
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton3.setText("Histórico");
@@ -77,7 +77,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton3);
-        jButton3.setBounds(330, 240, 140, 40);
+        jButton3.setBounds(330, 250, 140, 30);
 
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton4.setText("Subir Archivo");
@@ -87,7 +87,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton4);
-        jButton4.setBounds(330, 280, 140, 40);
+        jButton4.setBounds(330, 290, 140, 30);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/noun_2034_cc.png"))); // NOI18N

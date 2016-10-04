@@ -5,6 +5,10 @@
  */
 package javafootballboard.Model;
 
+import java.util.ArrayList;
+import javafootballboard.Controller.ArchivoController;
+import javafootballboard.Controller.Archivos;
+
 /**
  *
  * @author Naty
@@ -20,6 +24,7 @@ public class Juego {
    String arbitro;
    String horaInicio;
    String horaFin;
+   ArrayList <Jugada> jugadas;
    int puntosA;
    int puntosB;
    
@@ -35,7 +40,8 @@ public class Juego {
        this.equipoA = equipoA;
        this.equipoB = equipoB;
        setTitulo();
-       setCod();        
+       setCod();    
+       cargarJugadas();
    }
    
     private void setCod(){
@@ -127,4 +133,26 @@ public class Juego {
      public void SetEquipoB(Equipo equipoB){
        this.equipoB = equipoB;
    } 
+     
+    private  void cargarJugadas()
+   {
+       for (String linea : ArchivoController.archivoController.jugadas) {
+           if(linea.contains(this.titulo)){
+               String[] datos = linea.split(",");
+               Jugada jugada = new Jugada(datos[0],datos[1],datos[2],datos[3],datos[4]);
+               jugadas.add(jugada);
+               
+           }
+       }
+    }
+
+    public ArrayList<Jugada> getJugadas() {
+        return jugadas;
+    }
+
+    public void setJugadas (ArrayList<Jugada> jugadas) {
+        this.jugadas = jugadas;
+    } 
+     
+     
 }
