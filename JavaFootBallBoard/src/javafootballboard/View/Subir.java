@@ -12,6 +12,7 @@ import javafootballboard.Model.Juego;
 import javafootballboard.Model.Jugador;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -411,6 +412,20 @@ public class Subir extends javax.swing.JFrame {
         jLHoraInicio.setText(juego.getHoraInicio());
         jLHoraFin.setText(juego.getHoraFin());
         jLEstadio.setText(juego.getEstadio());
+    }
+    
+    public boolean terminarProceso(){
+        
+        // Guardar partido en los archivos
+        // Cargar nuevamente los arreglos de menu
+        
+        if(true){
+            JOptionPane.showConfirmDialog(this, "Partido guardado correctamente");
+            return true;
+        }else{
+            JOptionPane.showConfirmDialog(this, "Ha ocurrido un error al momento de guardar");
+            return false;
+        }
     }
     
     /**
@@ -1575,8 +1590,10 @@ public class Subir extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        // TERMINAR EL PROCESO
-        //GUARDAR EL PARTIDO EN LA BD...
+        if(terminarProceso()){
+            this.dispose();
+        }
+        
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
