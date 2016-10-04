@@ -85,7 +85,6 @@ public class Historico extends javax.swing.JFrame {
     /*Creación de metodo para mostrar todos los juegos disponibles*/
     private void mostrarJuegos(){
         
-        
     } 
     
     
