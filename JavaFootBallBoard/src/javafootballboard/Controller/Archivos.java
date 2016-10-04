@@ -12,10 +12,10 @@ import javafootballboard.Model.Jugador;
 
 import javax.swing.JOptionPane;
 public class Archivos {
-    public static ArrayList<String> juegos;
-    public static ArrayList<String> equipos;
-    public static ArrayList<String> jugadores;
-    public static ArrayList<String> jugadas;
+    public ArrayList<String> juegos;
+    public ArrayList<String> equipos;
+    public ArrayList<String> jugadores;
+    public ArrayList<String> jugadas;
     
     private final String stringFolder = System.getProperty("user.dir") + "\\Archivos";
     private final String stringJuegos = stringFolder + "\\Juegos.csv";
@@ -41,7 +41,6 @@ public class Archivos {
         cargarEquipos();
         cargarJugadores();
         cargarJugadas();
-        
     }
     
     private void carpeta(){

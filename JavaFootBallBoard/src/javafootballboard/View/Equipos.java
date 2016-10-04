@@ -9,7 +9,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Controller.FiltroDeArchivos;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
@@ -24,6 +26,7 @@ public class Equipos extends javax.swing.JFrame {
      */
     public Equipos() {
         initComponents();
+        equiposCargados.setModel(new DefaultComboBoxModel(ArchivoController.archivoController.equipos.toArray()));
         manualMessage.setVisible(false);
         automaticMessage.setVisible(false);
     }
@@ -69,7 +72,6 @@ public class Equipos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        equiposCargados.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         equiposCargados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 equiposCargadosActionPerformed(evt);

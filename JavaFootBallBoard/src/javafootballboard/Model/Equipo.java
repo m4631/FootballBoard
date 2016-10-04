@@ -9,6 +9,7 @@ import javafootballboard.Controller.Archivos;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javafootballboard.Controller.ArchivoController;
 import javax.swing.JOptionPane;
 
 /**
@@ -51,7 +52,7 @@ public class Equipo {
    
    private  void cargarJugadores()
    {
-       for (String linea : Archivos.jugadores) {
+       for (String linea : ArchivoController.archivoController.jugadores) {
            if(linea.contains(this.nombre)){
                String[] datos = linea.split(",");
                Jugador jugador = new Jugador(datos[0],datos[1],datos[2]);
