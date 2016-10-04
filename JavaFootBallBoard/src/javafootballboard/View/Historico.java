@@ -5,7 +5,12 @@
  */
 package javafootballboard.View;
 
+import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Controller.Archivos;
+import javafootballboard.Model.Juego;
+import javafootballboard.Model.Jugador;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -18,8 +23,8 @@ public class Historico extends javax.swing.JFrame {
      */
     public Historico() {
         initComponents();
-        /*Variable para probar el modulo*/
-        Archivos archivos = new Archivos();
+        mostrarJuegos();
+        
     }
 
     /**
@@ -41,14 +46,14 @@ public class Historico extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Titulo", "Estadio", "Punt. Equip. A", "Punt. Equip. B", "Fecha", "Ciudad", "Arbitro"
+                "Titulo", "Estadio", "Punt. Equip. A", "Punt. Equip. B", "Fecha", "Ciudad", "Arbitro", "Inicio", "Fin"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -59,31 +64,71 @@ public class Historico extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablaJuegos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tablaJuegos.setColumnSelectionAllowed(true);
+        tablaJuegos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane2.setViewportView(tablaJuegos);
+        tablaJuegos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(43, 43, 43)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+  /*===============Declaracion de Variables globales=========================*/
+    
+    DefaultTableModel modeloTablaJuegos;
+    
+    
+    
+    
+    
+    
+    
     /*Creación de metodo para mostrar todos los juegos disponibles*/
-    private void mostrarJuegos(){
+    private  void mostrarJuegos(){
+        modeloTablaJuegos = (DefaultTableModel) tablaJuegos.getModel();
+        tablaJuegos.setModel(modeloTablaJuegos);
+        int fila = 0; 
+        for (String linea : ArchivoController.archivoController.juegos) {
+          
+               String[] datos = linea.split(",");
+              // Object[] orden = {datos[1],datos[2],datos[6],datos[7],datos[5],datos[3],datos[4],datos[8],datos[9]};
+            modeloTablaJuegos.insertRow(fila, new Object[]{});
+            modeloTablaJuegos.setValueAt(datos[1], fila, 0);
+            modeloTablaJuegos.setValueAt(datos[2], fila, 1);
+            modeloTablaJuegos.setValueAt(datos[6], fila, 2);
+            modeloTablaJuegos.setValueAt(datos[7], fila, 3);
+            modeloTablaJuegos.setValueAt(datos[5], fila, 4);
+            modeloTablaJuegos.setValueAt(datos[3], fila, 5);
+            modeloTablaJuegos.setValueAt(datos[4], fila, 6);
+            modeloTablaJuegos.setValueAt(datos[8], fila, 7);
+            modeloTablaJuegos.setValueAt(datos[9], fila, 8);
+            
+            fila++;
+           
+           
+           
+               
+              
+               
+           
+       }
         
     } 
     
@@ -116,10 +161,12 @@ public class Historico extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Historico().setVisible(true);
+            
             }
         });
     }
