@@ -9,11 +9,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Controller.FiltroDeArchivos;
+import javafootballboard.Model.Equipo;
+import javafootballboard.Model.Jugador;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,14 +28,33 @@ import javax.swing.JPanel;
  */
 public class Equipos extends javax.swing.JFrame {
 
+    public Subir subir = null;
+    private JFileChooser seleccionaArchivo;
     /**
      * Creates new form Equipos
      */
     public Equipos() {
         initComponents();
-        equiposCargados.setModel(new DefaultComboBoxModel(ArchivoController.archivoController.equipos.toArray()));
+        cargarEquipos();
         manualMessage.setVisible(false);
         automaticMessage.setVisible(false);
+    }
+    
+    public Equipos(Subir subir) {
+        initComponents();
+        cargarEquipos();
+        manualMessage.setVisible(false);
+        automaticMessage.setVisible(false);
+        this.subir = subir;
+    }
+    
+    public void cargarEquipos(){
+        DefaultComboBoxModel modelE = new DefaultComboBoxModel();
+        modelE.addElement("Seleccionar equipo...");
+        for( Map.Entry<String, Equipo> equipo : ArchivoController.ac.equipos.entrySet()){
+            modelE.addElement(equipo.getKey());
+        }
+        equiposCargados.setModel(modelE);
     }
 
     /**
@@ -45,7 +71,7 @@ public class Equipos extends javax.swing.JFrame {
         equiposCargados = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaJugadores = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         opcionManual = new javax.swing.JRadioButton();
@@ -72,6 +98,11 @@ public class Equipos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        equiposCargados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                equiposCargadosMouseClicked(evt);
+            }
+        });
         equiposCargados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 equiposCargadosActionPerformed(evt);
@@ -81,19 +112,19 @@ public class Equipos extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Lista de Jugadores");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaJugadores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre", "Apellido", "Posición"
+                "Nombre", "Apellido", "Posición", "", ""
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -104,7 +135,16 @@ public class Equipos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        tablaJugadores.setCellSelectionEnabled(true);
+        tablaJugadores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaJugadoresMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tablaJugadoresMouseExited(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaJugadores);
 
         jButton3.setText("Cancelar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -282,7 +322,7 @@ public class Equipos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSeleccionarActionPerformed
-        JFileChooser seleccionaArchivo = new JFileChooser ();
+        seleccionaArchivo = new JFileChooser ();
         seleccionaArchivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
         seleccionaArchivo.setFileFilter(new FiltroDeArchivos());
         seleccionaArchivo.setMultiSelectionEnabled(false);
@@ -300,6 +340,28 @@ public class Equipos extends javax.swing.JFrame {
         botonSubir.setEnabled(true);
     }//GEN-LAST:event_botonSeleccionarActionPerformed
 
+    public void desactivarAutomatico(){
+        opcionAutomatico.setSelected(false);
+        opcionManual.setSelected(false);
+        manualMessage.setVisible(false);
+        automaticMessage.setVisible(true);
+        equiposCargados.setEnabled(true);
+        botonSeleccionar.setEnabled(false);
+        nombreEquipo.setEnabled(false);
+        botonSubir.setEnabled(false);
+    }
+    
+    public void desactivarManual(){
+        opcionManual.setSelected(false);
+        opcionAutomatico.setSelected(false);
+        botonSeleccionar.setEnabled(false);
+        nombreEquipo.setEnabled(false);
+        botonSubir.setEnabled(false);
+        manualMessage.setVisible(true);
+        automaticMessage.setVisible(false);
+        equiposCargados.setEnabled(true);
+    }
+    
     private void opcionAutomaticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionAutomaticoActionPerformed
         opcionManual.setSelected(false);
         manualMessage.setVisible(false);
@@ -334,11 +396,40 @@ public class Equipos extends javax.swing.JFrame {
     }//GEN-LAST:event_opcionManualActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        
+        if(subir != null){
+            subir.setEnabled(true);
+            subir.cargarComboBoxes();
+            dispose();
+            return;
+        }
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void equiposCargadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equiposCargadosActionPerformed
-
+        if(equiposCargados.getSelectedIndex() == 0){
+            DefaultTableModel modelT = new DefaultTableModel(0,0);
+            tablaJugadores.setModel(modelT);
+            return;
+        }
+        Equipo e = ArchivoController.ac.equipos.get(equiposCargados.getSelectedItem().toString());
+        String[][] x = {};
+        DefaultTableModel modelT = new DefaultTableModel(x, new String[]{"Nombre","Apellido","Posición","",""});
+        tablaJugadores.setModel(modelT);
+        int i = 0;
+        for(Jugador jugador : e.getJugadores() ){
+            modelT.insertRow(i, new Object[]{});
+            modelT.setValueAt(jugador.getNombre(), i, 0);
+            modelT.setValueAt(jugador.getApellido(), i, 1);
+            modelT.setValueAt(jugador.getPosicion(), i, 2);
+            JButton edit = new JButton("Editar");
+            edit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/edit.png")));
+            modelT.setValueAt(new JButton("Editar").getIcon(), i, 3);
+            modelT.setValueAt(new JButton("Eliminar"), i, 4);
+            i++;
+        }
     }//GEN-LAST:event_equiposCargadosActionPerformed
 
     private void botonSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubirActionPerformed
@@ -347,11 +438,25 @@ public class Equipos extends javax.swing.JFrame {
             automaticMessage.setText("Necesita nombrar su equipo");
             automaticMessage.setForeground(Color.red);
             automaticMessage.setVisible(true);
+            return;
         }
         
-        automaticMessage.setText("El equipo ha sido subido exitosamente");
+        File f = seleccionaArchivo.getSelectedFile();
+        if(!ArchivoController.ac.equipos.containsKey(nombreEquipo.getText())){
+            ArchivoController.ac.equipos.put(nombreEquipo.getText(), new Equipo(nombreEquipo.getText()));
+            ArchivoController.ac.cargarJugadores(f.getPath(), ArchivoController.ac.equipos.get(nombreEquipo.getText()));
+        }else{
+            automaticMessage.setText("Ya existe un equipo con este nombre");
+            automaticMessage.setForeground(Color.red);
+            automaticMessage.setVisible(true);
+            return;
+        }
+        
+        automaticMessage.setText("El archivo ha sido subido exitosamente");
         automaticMessage.setForeground(Color.green.darker());
         automaticMessage.setVisible(true);
+        cargarEquipos();
+        desactivarAutomatico();
     }//GEN-LAST:event_botonSubirActionPerformed
 
     private void nombreEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreEquipoActionPerformed
@@ -387,10 +492,33 @@ public class Equipos extends javax.swing.JFrame {
     }//GEN-LAST:event_nombreEquipoMouseExited
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if(subir != null){
+            subir.setEnabled(true);
+            subir.cargarComboBoxes();
+            dispose();
+            return;
+        }
         Menu menu = new Menu();
         menu.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void equiposCargadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_equiposCargadosMouseClicked
+        manualMessage.setVisible(false);
+        automaticMessage.setVisible(false);
+    }//GEN-LAST:event_equiposCargadosMouseClicked
+
+    private void tablaJugadoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaJugadoresMouseClicked
+        int r = tablaJugadores.getSelectedRow();
+        int c = tablaJugadores.getSelectedColumn();
+        if( tablaJugadores.getCellEditor() != null && 
+                tablaJugadores.getCellEditor().getCellEditorValue().toString().equals("") ){
+            tablaJugadores.getCellEditor().cancelCellEditing();
+        }
+    }//GEN-LAST:event_tablaJugadoresMouseClicked
+
+    private void tablaJugadoresMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaJugadoresMouseExited
+    }//GEN-LAST:event_tablaJugadoresMouseExited
 
     public void setManualText(String s, Boolean b){
         manualMessage.setVisible(false);
@@ -449,12 +577,12 @@ public class Equipos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel manualMessage;
     private javax.swing.JTextField nombreEquipo;
     private javax.swing.JRadioButton opcionAutomatico;
     private javax.swing.JRadioButton opcionManual;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JLabel seleccionado;
+    private javax.swing.JTable tablaJugadores;
     // End of variables declaration//GEN-END:variables
 }
