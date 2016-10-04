@@ -13,16 +13,15 @@ public class Jugador {
    String nombre;
    String apellido;
    String posicion;
-   String equipo;
+   Equipo equipo;
    
    public Jugador(String nombre, String apellido,String posicion){
        this.posicion = posicion;
        this.nombre = nombre;
-       this.apellido = apellido;
-       
+       this.apellido = apellido; 
    }
    
-   public void setEquipo(String equipo){
+   public void setEquipo(Equipo equipo){
        this.equipo = equipo;
    }
   
@@ -37,7 +36,7 @@ public class Jugador {
    }
     
    
-     public String getEquipo(){
+     public Equipo getEquipo(){
        return equipo;
    }
      public String getNombre(){

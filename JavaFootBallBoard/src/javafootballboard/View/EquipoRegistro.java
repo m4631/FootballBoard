@@ -7,6 +7,7 @@ package javafootballboard.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Model.Equipo;
 import javafootballboard.Model.Jugador;
 import javax.swing.JLabel;
@@ -296,15 +297,20 @@ public class EquipoRegistro extends javax.swing.JFrame {
                 Jugador jugador = new Jugador(names.get(i).getText(), 
                         lastnames.get(i).getText(), positions.get(i).getText());
                 equipo.agregarJugador(jugador);
+                ArchivoController.ac.jugadores.put(names.get(i).getText()+" "+lastnames.get(i).getText(), jugador);
             }
         }
+        ArchivoController.ac.equipos.put(nombreEquipo.getText(), equipo);
         equipoActual.setManualText("El equipo fue cargado exitosamente!", true);
+        equipoActual.desactivarManual();
+        equipoActual.cargarEquipos();
         equipoActual.setEnabled(true);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         equipoActual.setManualText("Ningun equipo fue cargado manualmente", false);
+        equipoActual.desactivarManual();
         equipoActual.setEnabled(true);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

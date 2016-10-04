@@ -12,5 +12,5 @@ import java.util.ArrayList;
  * @author Mabel
  */
 public class ArchivoController {
-   public static Archivos archivoController = new Archivos();
+   public static Archivos ac = new Archivos();
 }

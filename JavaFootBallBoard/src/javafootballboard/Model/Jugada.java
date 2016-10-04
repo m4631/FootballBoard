@@ -10,12 +10,14 @@ package javafootballboard.Model;
  * @author Naty
  */
 public class Jugada {
-    String equipo;
+    Juego juego;
     String nombre;
     Jugador jugador;
+    Equipo equipo;
     String hora;
    
-    public Jugada(String nombre, String equipo, Jugador jugador, String hora){
+    public Jugada(Juego juego, String nombre, Jugador jugador, Equipo equipo, String hora){
+        this.juego = juego;
         this.nombre = nombre; 
         this.equipo = equipo;
         this.jugador = jugador; 
@@ -24,35 +26,43 @@ public class Jugada {
   
     public void setNombre(String nombre){
        this.nombre = nombre;
-   }
+    }
     
-    public void setEquipo(String equipo){
+    public void setEquipo(Equipo equipo){
        this.equipo = equipo;
-   }
+    }
     
     public void setJugador(Jugador jugador){
        this.jugador = jugador;
-   }
+    }
+    
+    public void setJuego(Juego juego){
+        this.juego = juego;
+    }
     
     public void setHora(String hora){
        this.hora = hora;
-   }
+    }
     
     public String getNombre(){
-       return nombre;
-   }
+        return nombre;
+    }
     
-     public String getEquipo(){
-       return equipo;
-   }
-      public Jugador getJugador(){
+    public Equipo getEquipo(){
+        return equipo;
+    }
+    
+    public Jugador getJugador(){
        return jugador;
-   }
-       public String getHora(){
+    }
+    
+    public String getHora(){
        return hora;
-   }
-   
- 
+    }
+       
+    public Juego getJuego(){
+       return juego;
+    }
 }
    
    
