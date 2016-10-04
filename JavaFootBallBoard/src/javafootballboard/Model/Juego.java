@@ -24,10 +24,9 @@ public class Juego {
    String arbitro;
    String horaInicio;
    String horaFin;
-   ArrayList <Jugada> jugadas;
+   ArrayList <Jugada> jugadas = new ArrayList<Jugada>();
    int puntosA;
    int puntosB;
-   ArrayList<Jugada> jugadas = new ArrayList<Jugada>(); 
    
    public Juego(){
    }
@@ -162,17 +161,6 @@ public class Juego {
    } 
      public void SetEquipoB(Equipo equipoB){
        this.equipoB = equipoB;
-   } 
-    private  void cargarJugadas()
-   {
-       for (String linea : ArchivoController.archivoController.jugadas) {
-           if(linea.contains(this.titulo)){
-               String[] datos = linea.split(",");
-               Jugada jugada = new Jugada(datos[0],datos[1],datos[2],datos[3],datos[4]);
-               jugadas.add(jugada);
-               
-           }
-       }
     }
     public ArrayList<Jugada> getJugadas() {
         return jugadas;

@@ -15,7 +15,6 @@ public class Jugada {
     Jugador jugador;
     Equipo equipo;
     String hora;
-    String juego;
    
     public Jugada(Juego juego, String nombre, Jugador jugador, Equipo equipo, String hora){
         this.juego = juego;
@@ -25,7 +24,7 @@ public class Jugada {
         this.hora = hora;
     }
     
-     public void setJuego(String juego){
+     public void setJuego(Juego juego){
        this.juego = juego;
    }
     public void setNombre(String nombre){
@@ -36,19 +35,13 @@ public class Jugada {
        this.equipo = equipo;
     }
     
-    public void setJugador(String jugador){
+    public void setJugador(Jugador jugador){
        this.jugador = jugador;
-    }
-    
-    public void setJuego(Juego juego){
-        this.juego = juego;
-    }
-    
+    }    
     public void setHora(String hora){
        this.hora = hora;
     }
-    
-    public String getJuego(){
+    public Juego getJuego(){
        return juego;
    }
     public String getNombre(){
@@ -57,17 +50,11 @@ public class Jugada {
     public Equipo getEquipo(){
         return equipo;
     }
-    
     public Jugador getJugador(){
        return jugador;
     }
-    
     public String getHora(){
        return hora;
-    }
-       
-    public Juego getJuego(){
-       return juego;
     }
 }
    
