@@ -413,7 +413,7 @@ public class Subir extends javax.swing.JFrame {
         jLHoraFin.setText(juego.getHoraFin());
         jLEstadio.setText(juego.getEstadio());
     }
-    
+
     public boolean terminarProceso(){
         
         // Guardar partido en los archivos
@@ -427,7 +427,7 @@ public class Subir extends javax.swing.JFrame {
             return false;
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1593,7 +1593,8 @@ public class Subir extends javax.swing.JFrame {
         if(terminarProceso()){
             this.dispose();
         }
-        
+        // TERMINAR EL PROCESO
+        //GUARDAR EL PARTIDO EN LA BD...
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
