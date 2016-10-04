@@ -67,7 +67,7 @@ public class Archivos {
         {
             try(FileWriter Juegos = new FileWriter(stringJuegos)) 
             { 
-                Juegos.append("Cod,Titulo,Estadio,Ciudad,Arbitro,Fecha,PuntuacionA,PuntuacionB");
+                Juegos.append("Cod,Titulo,Estadio,Ciudad,Arbitro,Fecha,PuntuacionA,PuntuacionB,Inicio,Fin");
                 Juegos.flush();
                 System.out.println("Archivo Juegos creado");
                 Juegos.close();

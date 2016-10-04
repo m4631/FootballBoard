@@ -12,16 +12,21 @@ package javafootballboard.Model;
 public class Jugada {
     String equipo;
     String nombre;
-    Jugador jugador;
+    String jugador;
     String hora;
+    String juego;
    
-    public Jugada(String nombre, String equipo, Jugador jugador, String hora){
+    public Jugada(String juego,String nombre, String equipo, String jugador, String hora){
+        this.juego = juego;
         this.nombre = nombre; 
         this.equipo = equipo;
         this.jugador = jugador; 
         this.hora = hora;
     }
-  
+    
+     public void setJuego(String juego){
+       this.juego = juego;
+   }
     public void setNombre(String nombre){
        this.nombre = nombre;
    }
@@ -30,7 +35,7 @@ public class Jugada {
        this.equipo = equipo;
    }
     
-    public void setJugador(Jugador jugador){
+    public void setJugador(String jugador){
        this.jugador = jugador;
    }
     
@@ -38,6 +43,9 @@ public class Jugada {
        this.hora = hora;
    }
     
+    public String getJuego(){
+       return juego;
+   }
     public String getNombre(){
        return nombre;
    }
@@ -45,7 +53,7 @@ public class Jugada {
      public String getEquipo(){
        return equipo;
    }
-      public Jugador getJugador(){
+      public String getJugador(){
        return jugador;
    }
        public String getHora(){

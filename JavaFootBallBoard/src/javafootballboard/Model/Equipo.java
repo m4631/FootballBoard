@@ -55,8 +55,7 @@ public class Equipo {
            if(linea.contains(this.nombre)){
                String[] datos = linea.split(",");
                Jugador jugador = new Jugador(datos[0],datos[1],datos[2]);
-               jugador.setEquipo(this.nombre);
-               jugadores.add(jugador);
+               agregarJugador(jugador);
            }
        }
     }
