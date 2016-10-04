@@ -6,6 +6,7 @@
 package javafootballboard.Model;
 
 import java.util.ArrayList;
+import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Controller.Archivos;
 
 /**
@@ -135,7 +136,7 @@ public class Juego {
      
     private  void cargarJugadas()
    {
-       for (String linea : Archivos.jugadas) {
+       for (String linea : ArchivoController.archivoController.jugadas) {
            if(linea.contains(this.titulo)){
                String[] datos = linea.split(",");
                Jugada jugada = new Jugada(datos[0],datos[1],datos[2],datos[3],datos[4]);
