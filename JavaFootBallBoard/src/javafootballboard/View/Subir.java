@@ -13,6 +13,9 @@ import javafootballboard.Model.Equipo;
 import javafootballboard.Model.Juego;
 import javafootballboard.Model.Jugada;
 import javafootballboard.Model.Jugador;
+import javafootballboard.Model.WindowCloseListener;
+import javafootballboard.Model.onlyDigitsListener;
+import javafootballboard.Model.onlyLettersListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -45,18 +48,22 @@ public class Subir extends javax.swing.JFrame {
     DefaultListModel modeloC; //Modelo para la lista de jugadas...
     
     boolean finalizado;
-    
+
     public Subir() {
         initComponents();
+        setTitle("Footballboard - uploadFiles");
         setResizable(false);
         setVisible(true);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
         
         //Inicializando variables
         inicializarCamposA();
         inicializarCamposB();
         iniciarTabla();
+        asignarListeners();
         finalizado = false;
-        
+
         //Cargando comboBoxes iniciales
         cargarComboBoxes();
         jTablePartidos.setAutoCreateRowSorter(true);// Permite sorting en tabla
@@ -416,6 +423,26 @@ public class Subir extends javax.swing.JFrame {
             return false;
         }
     }
+    
+    public void asignarListeners(){
+        //Campos solo digitos
+        jHora1.addKeyListener(new onlyDigitsListener(jHora1,2));
+        jMinuto1.addKeyListener(new onlyDigitsListener(jMinuto1,2));
+        jSegundo1.addKeyListener(new onlyDigitsListener(jSegundo1,2));
+        jHora2.addKeyListener(new onlyDigitsListener(jHora2,2));
+        jMinuto2.addKeyListener(new onlyDigitsListener(jMinuto2,2));
+        jSegundo2.addKeyListener(new onlyDigitsListener(jSegundo2,2));
+        jMinuto3.addKeyListener(new onlyDigitsListener(jMinuto3,2));
+        jSegundo3.addKeyListener(new onlyDigitsListener(jSegundo3,2));
+        
+        jPuntajeA.addKeyListener(new onlyDigitsListener(jPuntajeA, 3));
+        jPuntajeB.addKeyListener(new onlyDigitsListener(jPuntajeB, 3));
+        
+        //campos solo letras
+        jLugar.addKeyListener(new onlyLettersListener(jLugar, 40));
+        jEstadio.addKeyListener(new onlyLettersListener(jEstadio, 40));
+        jArbitro.addKeyListener(new onlyLettersListener(jArbitro, 40));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -436,12 +463,10 @@ public class Subir extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jComboEquipoB = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jErrorA = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
         jSiguienteA = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jProgressBar2 = new javax.swing.JProgressBar();
@@ -572,13 +597,6 @@ public class Subir extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Añadir equipo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel4.setForeground(new java.awt.Color(102, 102, 102));
@@ -611,13 +629,6 @@ public class Subir extends javax.swing.JFrame {
         jErrorA.setForeground(new java.awt.Color(255, 0, 0));
         jErrorA.setText("jLabel47");
 
-        jButton6.setText("Actualizar");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -637,11 +648,8 @@ public class Subir extends javax.swing.JFrame {
                                     .addComponent(jComboEquipoA, 0, 257, Short.MAX_VALUE)
                                     .addComponent(jComboEquipoB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1)
-                                    .addComponent(jButton2)))
-                            .addComponent(jErrorA, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton6)))
+                                .addComponent(jButton1))
+                            .addComponent(jErrorA, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(107, 107, 107)
                         .addComponent(jLabel3)))
@@ -662,13 +670,10 @@ public class Subir extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboEquipoB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         jSiguienteA.setText("Siguiente");
@@ -1584,10 +1589,6 @@ public class Subir extends javax.swing.JFrame {
         //GUARDAR EL PARTIDO EN LA BD...
     }//GEN-LAST:event_jButton15ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-       cargarComboBoxes();
-    }//GEN-LAST:event_jButton6ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if(comprobarCampos()){      
             horaInicio = jHora1.getText()+":"+jMinuto1.getText()+":"+jSegundo1.getText();
@@ -1664,16 +1665,12 @@ public class Subir extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboEquipoActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Equipos equipos = new Equipos(this);
-        equipos.setVisible(true);
+        Equipos frameEquipos = new Equipos(this);
+        frameEquipos.setVisible(true);
+        frameEquipos.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        frameEquipos.addWindowListener(new WindowCloseListener(frameEquipos));
         this.setEnabled(false);
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Equipos equipos = new Equipos(this);
-        equipos.setVisible(true);
-        this.setEnabled(false);
-    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     /**
@@ -1719,11 +1716,9 @@ public class Subir extends javax.swing.JFrame {
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jCargarJugadas;

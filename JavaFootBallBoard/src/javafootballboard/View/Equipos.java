@@ -38,6 +38,7 @@ public class Equipos extends javax.swing.JFrame {
         cargarEquipos();
         manualMessage.setVisible(false);
         automaticMessage.setVisible(false);
+        
     }
     
     public Equipos(Subir subir) {
@@ -495,6 +496,7 @@ public class Equipos extends javax.swing.JFrame {
         if(subir != null){
             subir.setEnabled(true);
             subir.cargarComboBoxes();
+            subir.activarBotonA();
             dispose();
             return;
         }
