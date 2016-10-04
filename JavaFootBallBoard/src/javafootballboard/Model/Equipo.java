@@ -38,11 +38,19 @@ public class Equipo {
         jugador.setEquipo(this);
         jugadores.add(jugador);
    }
-
+   private  void cargarJugadores()
+   {
+       for (String linea : ArchivoController.archivoController.jugadores) {
+           if(linea.contains(this.nombre)){
+               String[] datos = linea.split(",");
+               Jugador jugador = new Jugador(datos[0],datos[1],datos[2]);
+               agregarJugador(jugador);
+           }
+       }
+    }
     public ArrayList<Jugador> getJugadores() {
         return jugadores;
     }
-
     public void setJugadores(ArrayList<Jugador> jugadores) {
         this.jugadores = jugadores;
     }
