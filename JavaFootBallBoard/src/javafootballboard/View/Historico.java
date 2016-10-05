@@ -5,10 +5,16 @@
  */
 package javafootballboard.View;
 
+import java.util.Map;
 import javafootballboard.Controller.ArchivoController;
+import static javafootballboard.Controller.ArchivoController.ac;
 import javafootballboard.Controller.Archivos;
+import javafootballboard.Model.Equipo;
 import javafootballboard.Model.Juego;
 import javafootballboard.Model.Jugador;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -25,6 +31,8 @@ public class Historico extends javax.swing.JFrame {
         initComponents();
         mostrarJuegos();
         
+        
+          
     }
 
     /**
@@ -43,17 +51,19 @@ public class Historico extends javax.swing.JFrame {
 
         tablaJuegos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Titulo", "Estadio", "Punt. Equip. A", "Punt. Equip. B", "Fecha", "Ciudad", "Arbitro", "Inicio", "Fin"
+                "Titulo", "Equipo A", "Punt. Equip. A", "Equipo B", "Punt. Equip. B", "Estadio", "Ciudad", "Fecha", "Inicio", "Fin", "Arbitro"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -64,8 +74,7 @@ public class Historico extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablaJuegos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tablaJuegos.setCellSelectionEnabled(false);
+        tablaJuegos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(tablaJuegos);
         tablaJuegos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
@@ -75,7 +84,7 @@ public class Historico extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -90,46 +99,61 @@ public class Historico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
   /*===============Declaracion de Variables globales=========================*/
-    
-    DefaultTableModel modeloTablaJuegos;
-    
+    String claveJuegos[]; //Almacena los codigos de los juegos activos
     
     
     
     
     
     
-    /*Creación de metodo para mostrar todos los juegos disponibles*/
+    
+    /*Creación de metodo para mostrar todos los juegos Realizados*/
     private  void mostrarJuegos(){
-        modeloTablaJuegos = (DefaultTableModel) tablaJuegos.getModel();
-        tablaJuegos.setModel(modeloTablaJuegos);
-        int fila = 0; 
-        for (String linea : ArchivoController.archivoController.juegos) {
+        
+        String[][] x = {};
+        DefaultTableModel modeloTablaJuegos  = (DefaultTableModel) tablaJuegos.getModel();
+       tablaJuegos.setModel(modeloTablaJuegos);
+       int fila = 0;
+     
+       
+        for( Map.Entry<String, Juego> juegoKey : ArchivoController.ac.juegos.entrySet()) {
           
-               String[] datos = linea.split(",");
               // Object[] orden = {datos[1],datos[2],datos[6],datos[7],datos[5],datos[3],datos[4],datos[8],datos[9]};
-            modeloTablaJuegos.insertRow(fila, new Object[]{});
-            modeloTablaJuegos.setValueAt(datos[1], fila, 0);
-            modeloTablaJuegos.setValueAt(datos[2], fila, 1);
-            modeloTablaJuegos.setValueAt(datos[6], fila, 2);
-            modeloTablaJuegos.setValueAt(datos[7], fila, 3);
-            modeloTablaJuegos.setValueAt(datos[5], fila, 4);
-            modeloTablaJuegos.setValueAt(datos[3], fila, 5);
-            modeloTablaJuegos.setValueAt(datos[4], fila, 6);
-            modeloTablaJuegos.setValueAt(datos[8], fila, 7);
-            modeloTablaJuegos.setValueAt(datos[9], fila, 8);
+              Juego juego = ArchivoController.ac.juegos.get(juegoKey.getKey());
             
+            modeloTablaJuegos.insertRow(fila, new Object[]{});
+            modeloTablaJuegos.setValueAt(juego.getTitulo(), fila, 0);
+            modeloTablaJuegos.setValueAt(juego.getEquipoA().getNombre(), fila, 1);
+            modeloTablaJuegos.setValueAt(juego.getPuntosA(), fila, 2);
+            modeloTablaJuegos.setValueAt(juego.getEquipoB().getNombre(), fila, 3);
+            modeloTablaJuegos.setValueAt(juego.getPuntosB(), fila, 4);
+            modeloTablaJuegos.setValueAt(juego.getEstadio(), fila, 5);
+            modeloTablaJuegos.setValueAt(juego.getCiudad(), fila, 6);
+            modeloTablaJuegos.setValueAt(juego.getFecha(), fila, 7);
+            modeloTablaJuegos.setValueAt(juego.getHoraInicio(), fila, 8);
+            modeloTablaJuegos.setValueAt(juego.getHoraFin(), fila, 9);
+            modeloTablaJuegos.setValueAt(juego.getArbitro(), fila, 10);
             fila++;
-           
-           
-           
-               
-              
-               
+            
+             
            
        }
         
     } 
+    private void obtenerFilaActiva(){
+        ListSelectionModel modeloSeleccionTabla = tablaJuegos.getSelectionModel();
+         modeloSeleccionTabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        modeloSeleccionTabla.addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event){
+                 if (tablaJuegos.getSelectedRow() > -1) {
+            // print first column value from selected row
+            System.out.println(tablaJuegos.getSelectedRow());
+        }
+                
+            }
+        
+        });
+    }
     
     
     
@@ -159,7 +183,8 @@ public class Historico extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Historico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
+      
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -167,11 +192,13 @@ public class Historico extends javax.swing.JFrame {
                 new Historico().setVisible(true);
             
             }
+      
+            
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tablaJuegos;
+    private static javax.swing.JTable tablaJuegos;
     // End of variables declaration//GEN-END:variables
 }
