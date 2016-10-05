@@ -365,6 +365,7 @@ public class Archivos {
     
     public ArrayList<String> convertirAEquiposCSV(){
         ArrayList<String> lineas = new ArrayList<>();
+        lineas.add("Nombre");
         for(Map.Entry<String, Equipo> elemento : equipos.entrySet()){
             lineas.add(elemento.getValue().getNombre());
         }
@@ -372,6 +373,7 @@ public class Archivos {
     }
     public ArrayList<String> convertirAJugadoresCSV(){
         ArrayList<String> lineas = new ArrayList<>();
+        lineas.add("Nombre,Apellido,Posicion,Equipo");
         for(Map.Entry<String, Jugador> elemento : jugadores.entrySet()){
             lineas.add(elemento.getValue().getNombre()+","+elemento.getValue().getApellido()+","+
                     elemento.getValue().getPosicion()+","+elemento.getValue().getEquipo().getNombre());
@@ -380,6 +382,7 @@ public class Archivos {
     }
     public ArrayList<String> convertirAJuegosCSV(){
         ArrayList<String> lineas = new ArrayList<>();
+        lineas.add("Cod,Titulo,EquipoA,EquipoB,Estadio,Ciudad,Fecha,Arbitro,HoraInicio,HoraFin,PuntuacionA,PuntuacionB");
         for(Map.Entry<String, Juego> elemento : juegos.entrySet()){
             lineas.add(elemento.getValue().getCod()+","+elemento.getValue().getTitulo()+","+
               elemento.getValue().getEquipoA().getNombre()+","+elemento.getValue().getEquipoB().getNombre()+","+
@@ -393,6 +396,7 @@ public class Archivos {
     }
     public ArrayList<String> convertirAJugadasCSV(){
         ArrayList<String> lineas = new ArrayList<>();
+        lineas.add("Cod. de juego,Nombre de jugada,Jugador,Equipo,Hora");
         for(Jugada jugada : jugadas){
             lineas.add(jugada.getJuego().getCod()+","+jugada.getNombre()+","+
                     jugada.getJugador().getNombre()+" "+jugada.getJugador().getApellido()+","+jugada.getEquipo().getNombre()
@@ -412,10 +416,10 @@ public class Archivos {
                 archivoEquipos();
                 FileWriter actEquipos = new FileWriter(stringEquipos); 
                 
-            for (String linea : equiposCSV) {
-                actEquipos.append(linea);
-                actEquipos.flush();
-            }
+                for (String linea : equiposCSV) {
+                    actEquipos.append(linea);
+                    actEquipos.flush();
+                }
                 
             actEquipos.close();
                

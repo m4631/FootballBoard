@@ -11,7 +11,7 @@ import javax.swing.JLabel;
  *
  * @author Carlos
  */
-public class Cronometro extends Thread {
+public class Cronometro extends Thread implements Runnable {
     private int minutos;
     private int segundos;
     private boolean pausa;
@@ -36,7 +36,7 @@ public class Cronometro extends Thread {
                         if(segundos<10){
                             aux2 = "0"+segundos;
                         }                    
-                        label.setText(aux1+":"+aux2);
+                        label.setText(aux1+" : "+aux2);
                         delay();
                     }
                 }
@@ -48,7 +48,7 @@ public class Cronometro extends Thread {
     }
     private void delay(){
         try{
-            Thread.sleep(1000);
+            Thread.sleep(4);
         }catch(InterruptedException e){
         }
         if (pausa) {
@@ -63,6 +63,7 @@ public class Cronometro extends Thread {
     }
     
     public void iniciar(){
+        (new Thread(new Cronometro(this.label))).start();
         this.run();
     }
     
