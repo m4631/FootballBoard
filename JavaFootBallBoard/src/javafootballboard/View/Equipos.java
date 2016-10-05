@@ -9,9 +9,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Controller.FiltroDeArchivos;
 import javafootballboard.Model.Equipo;
@@ -29,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
 public class Equipos extends javax.swing.JFrame {
 
     public Subir subir = null;
+    public Iniciar iniciar = null;
     private JFileChooser seleccionaArchivo;
     /**
      * Creates new form Equipos
@@ -49,9 +53,18 @@ public class Equipos extends javax.swing.JFrame {
         this.subir = subir;
     }
     
+    public Equipos(Iniciar iniciar) {
+        initComponents();
+        cargarEquipos();
+        manualMessage.setVisible(false);
+        automaticMessage.setVisible(false);
+        this.iniciar = iniciar;
+    }
+    
     public void cargarEquipos(){
         DefaultComboBoxModel modelE = new DefaultComboBoxModel();
         modelE.addElement("Seleccionar equipo...");
+        System.out.println(ArchivoController.ac.equipos.entrySet().size());
         for( Map.Entry<String, Equipo> equipo : ArchivoController.ac.equipos.entrySet()){
             modelE.addElement(equipo.getKey());
         }
@@ -404,6 +417,12 @@ public class Equipos extends javax.swing.JFrame {
             dispose();
             return;
         }
+        if(iniciar != null){
+            iniciar.setEnabled(true);
+            iniciar.cargarComboBoxes();
+            dispose();
+            return;
+        }
         Menu menu = new Menu();
         menu.setVisible(true);
         dispose();
@@ -458,6 +477,11 @@ public class Equipos extends javax.swing.JFrame {
         automaticMessage.setVisible(true);
         cargarEquipos();
         desactivarAutomatico();
+        try {
+            ArchivoController.ac.actEquipos();
+        } catch (IOException ex) {
+            Logger.getLogger(Equipos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonSubirActionPerformed
 
     private void nombreEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreEquipoActionPerformed
@@ -497,6 +521,12 @@ public class Equipos extends javax.swing.JFrame {
             subir.setEnabled(true);
             subir.cargarComboBoxes();
             subir.activarBotonA();
+            dispose();
+            return;
+        }
+        if(iniciar != null){
+            iniciar.setEnabled(true);
+            iniciar.cargarComboBoxes();
             dispose();
             return;
         }

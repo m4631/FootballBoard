@@ -78,7 +78,7 @@ public class Juego {
         }
     }
    
-    private void setCod(){
+    public void setCod(){
        this.cod = this.fecha + "->" + this.horaInicio + "->" + this.titulo;
     }
     public void setTitulo(){

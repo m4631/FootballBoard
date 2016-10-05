@@ -5,40 +5,38 @@
  */
 package javafootballboard.View;
 
+import java.awt.Image;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafootballboard.Controller.ArchivoController;
+import javafootballboard.Model.Cronometro;
 import javafootballboard.Model.Equipo;
 import javafootballboard.Model.Juego;
 import javafootballboard.Model.Jugada;
 import javafootballboard.Model.Jugador;
-import javafootballboard.Model.WindowCloseListener;
-import javafootballboard.Model.onlyDigitsListener;
-import javafootballboard.Model.onlyLettersListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Carlos
  */
-public class Subir extends javax.swing.JFrame {
+public class Iniciar extends javax.swing.JFrame {
 
     /**
      * Creates new form Subir
      */
     Juego juego;
+    
+    Cronometro cronometro;
     
     Equipo equipoA;
     Equipo equipoB;
@@ -46,45 +44,39 @@ public class Subir extends javax.swing.JFrame {
     String fecha;
     String horaInicio;
     String horaFin;
-    DateFormat df = DateFormat.getDateInstance();
     
-    ArrayList<Jugada> jugadas; // Referencia a template de jugadas
+    String[] jugadas; // Referencia a template de jugadas
     String[] columnas; // columnas de la tabla partidos
     
     DefaultComboBoxModel modeloA; // Modelo comboBoxes
     DefaultTableModel modeloB; //Modelo para la tabla de partidos...
-    DefaultListModel modeloC; //Modelo para la lista de jugadas...
+    DefaultTableModel modeloC; //Modelo para la tabla de jugadas...
     
     boolean finalizado;
-
-    public Subir() {
+    
+    public Iniciar() {
         initComponents();
-        setTitle("Footballboard - uploadFiles");
         setResizable(false);
         setVisible(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        cronometro = new Cronometro(cronometroLabel);
         
         //Inicializando variables
         inicializarCamposA();
         inicializarCamposB();
         iniciarTabla();
-        asignarListeners();
+        cargarTabla();
         finalizado = false;
-        jugadas = new ArrayList<>();
-
+        
         //Cargando comboBoxes iniciales
         cargarComboBoxes();
         jTablePartidos.setAutoCreateRowSorter(true);// Permite sorting en tabla
+        cargarImagen();
         
         //Deshabilitando componentes
         deshabilitarTabs();
         jSiguienteA.setEnabled(false);
-        jSiguienteB.setEnabled(false);
-        jSiguienteC.setEnabled(false);
         jErrorA.setVisible(false);
         jErrorB.setVisible(false);
-        jErrorC.setVisible(false);
     }
     
     //================================CODIGO TAB EQUIPO==================================================
@@ -103,9 +95,13 @@ public class Subir extends javax.swing.JFrame {
         }
     }
     
+    public void cargarImagen(){
+        imagenLabel.setIcon( new ImageIcon( new ImageIcon(getClass().getResource("/javafootballboard/Assets/canchaFutbol.png")).getImage().getScaledInstance(544, 175, Image.SCALE_DEFAULT) ) );
+    }
+    
     // Permite alterar el estado de un tab
     public void cambiarEstadoTab(int i, boolean n){
-        jTabbedPane1.setEnabledAt(i, n);
+        tabbedPane.setEnabledAt(i, n);
     }
     
     public boolean comprobarEquipos(){
@@ -229,7 +225,6 @@ public class Subir extends javax.swing.JFrame {
             mostrarErrorB(1);
             return false;
         }
-        /*
         //Valida que el puntajeA solo contenga numeros
         try{
             Integer.parseInt(jPuntajeA.getText());
@@ -242,7 +237,6 @@ public class Subir extends javax.swing.JFrame {
         }catch(Exception e){
             mostrarErrorB(2);  
         }
-        */
         mostrarErrorB(0);  
         return true;
     }
@@ -259,11 +253,9 @@ public class Subir extends javax.swing.JFrame {
         juego.setEquipoA(equipoA);
         juego.setEquipoB(equipoB);
         juego.setTitulo();
-        juego.setCod();
         juego.setHoraFin(horaFin);
         juego.setHoraInicio(horaInicio);
-        juego.setCod();
-        
+        ArchivoController.ac.juegos.put(juego.getCod(), juego);
     }
     
     public void iniciarTabla(){
@@ -272,7 +264,6 @@ public class Subir extends javax.swing.JFrame {
         modeloB = new DefaultTableModel(x, columnas);
         jTablePartidos.setModel(modeloB);
     }
-    
     public void cargarTabla(){
         int i = 0;
         for(Map.Entry<String,Juego> partido : ArchivoController.ac.juegos.entrySet()){
@@ -282,27 +273,46 @@ public class Subir extends javax.swing.JFrame {
             modeloB.setValueAt(partido.getValue().getFecha(), i, 2);
             i++;
         }
+        jTablePartidos.setModel(modeloB);
     }
     //==================================CODIGO TAB JUGADAS=============================
     
     public void iniciarTabJugadas(){
         cargarComboBoxEquipos();
-        cargarComboBoxJugadores();
-        cargarComboBoxJugadas();
-        iniciarCamposC();
-        iniciarLista();
+        cargarJugadasComboBox();
+        iniciarTablaJugadas();
     }
-    public void iniciarCamposC(){
-        jMinuto3.setText("");
-        jSegundo3.setText("");
+    
+    public void cargarJugadorComboBox(){
+        DefaultComboBoxModel modeloA = new DefaultComboBoxModel();   
+        modeloA.addElement("Seleccionar jugador...");
+        
+        Equipo equipo = ArchivoController.ac.equipos.get(jComboEquipo.getSelectedItem().toString());
+        
+        for( Jugador jugador : equipo.getJugadores()){
+            modeloA.addElement(jugador.getNombre()+" "+jugador.getApellido());
+        }
+        jComboJugador.setModel(modeloA);
     }
-    public void iniciarLista(){
-        modeloC = new DefaultListModel();
-        modeloC.addElement("Inicio del partido "+fecha+" "+horaInicio);
-        jListJugadas.setModel(modeloC);
+    
+    public void cargarJugadasComboBox(){
+        DefaultComboBoxModel modelA = new DefaultComboBoxModel();
+        modelA.addElement("Seleccionar jugada...");
+        for(String jugada: ArchivoController.ac.diccionarioJugadas){
+            modelA.addElement(jugada);
+        }
+        jComboJugada.setModel(modelA);  
     }
+
+    public void iniciarTablaJugadas(){
+        String[][] x = {};
+        modeloC = new DefaultTableModel(x, new String[]{"Equipo","Jugador","Jugada","Tiempo"});
+        tablaJugadas.setModel(modeloC);
+    }
+    
     public void cargarComboBoxEquipos(){
         modeloA = new DefaultComboBoxModel();   
+        modeloA.addElement("Seleccionar equipo...");
         modeloA.addElement(equipoA.getNombre());
         modeloA.addElement(equipoB.getNombre());
         jComboEquipo.setModel(modeloA);
@@ -329,125 +339,27 @@ public class Subir extends javax.swing.JFrame {
         
     }
     
-    public void cargarComboBoxJugadas(){
-        modeloA = new DefaultComboBoxModel(ArchivoController.ac.diccionarioJugadas.toArray());
-        jComboJugadas.setModel(modeloA);
-    }
-    
-    public boolean comprobarCamposC(){
-        if(jComboJugador.getSelectedItem().toString().equals("")||
-           jComboJugadas.getSelectedItem().toString().equals("")||
-                
-                jMinuto3.getText().equals("")||
-                jSegundo3.getText().equals("")){
-            mostrarErrorC(1);
-            return false;
-        }
-        mostrarErrorC(0);
-        return true;
-    }
-    
-    public void mostrarErrorC(int i){
-        switch (i) {
-            case 0:
-                jErrorC.setVisible(false);
-                break;
-            case 1:
-                jErrorC.setText("Error: Faltan campos por llenar");
-                jErrorC.setVisible(true);
-                break;
-             case 2:
-                jErrorC.setText("Error: Debe incluir jugadas a la lista");
-                jErrorC.setVisible(true);
-                break;
-            default:
-                break;
-        }
-    }
-    
     public void agregarJugada(){
-        
-        String[] aux = jComboJugador.getSelectedItem().toString().split(" ");
-        
-        modeloC.addElement(jComboEquipo.getSelectedItem().toString()
-                +": "+aux[0]+" "+aux[1]
-                +" "+jComboJugadas.getSelectedItem().toString()
-                +" "+jMinuto3.getText()+":"+jSegundo3.getText());
-        jListJugadas.setModel(modeloC);
-
-        String thisJugador = jComboJugador.getSelectedItem().toString();
-        String partesJugador[] = thisJugador.split(" ");
-		
-        jugadas.add(new Jugada(juego, jComboJugadas.getSelectedItem().toString(),
-                              ArchivoController.ac.jugadores.get(aux[0]+" "+aux[1]), 
-                              ArchivoController.ac.equipos.get(jComboEquipo.getSelectedItem().toString()),
-                              jMinuto3.getText()+":"+jSegundo3.getText()));
-        
-        ArchivoController.ac.jugadas.add(new Jugada(juego, 
-                jComboJugadas.getSelectedItem().toString(), 
-                ArchivoController.ac.jugadores.get(aux[0]+" "+aux[1]), 
+        int rows  = tablaJugadas.getRowCount();
+        modeloC.insertRow(rows, new Object[]{});
+        modeloC.setValueAt(jComboEquipo.getSelectedItem().toString(), rows, 0);
+        modeloC.setValueAt(jComboJugador.getSelectedItem().toString(), rows, 1);
+        modeloC.setValueAt(jComboJugada.getSelectedItem().toString(), rows, 2);
+        tablaJugadas.setModel(modeloC);
+        ArchivoController.ac.jugadas.add(new Jugada(ArchivoController.ac.juegos.get(juego.getCod()), 
+                jComboJugada.getSelectedItem().toString(), 
+                ArchivoController.ac.jugadores.get(jComboJugador.getSelectedItem().toString()), 
                 ArchivoController.ac.equipos.get(jComboEquipo.getSelectedItem().toString()),
-                jMinuto3.getText()+":"+jSegundo3.getText()));
+                "0"));
     }
     
     public void eliminarJugada(int i){
         if(i > 0){
-            modeloC.remove(i);
-            jugadas.remove(i-1);
-            ArchivoController.ac.jugadas.remove(i-1);
-            jListJugadas.setModel(modeloC);
+            modeloB.removeRow(i);
+            tablaJugadas.setModel(modeloB);
         }
-        
+        ArchivoController.ac.jugadas.remove(i);
     }
-    
-    public void agregarFin(){
-        modeloC.addElement("Fin del partido "+fecha+" "+horaFin);
-        jListJugadas.setModel(modeloC);
-    }
-    
-    public void quitarFin(){
-        int i = modeloC.getSize()-1;
-        if(i>0){
-        modeloC.remove(i);
-        jListJugadas.setModel(modeloC);
-        }
-    }
-    
-    public boolean cargarArchivoJugadas() {
-        JFileChooser file = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV files (*csv)", "csv");
-        file.setFileFilter(filter);
-        int result = file.showSaveDialog(null);
-        
-        if (result == JFileChooser.APPROVE_OPTION) {
-           String ruta = file.getSelectedFile().getAbsolutePath();
-           System.out.println(ruta);
-           
-           jugadas = new ArrayList<>();
-           
-           if(ArchivoController.ac.cargarJugadas(ruta, juego, equipoA, equipoB, jugadas)){
-               modeloC.clear();
-               for(Jugada j: jugadas){
-                   modeloC.addElement(j.getEquipo().getNombre()+": "+j.getJugador().getNombre()
-                           +" "+j.getJugador().getApellido()
-                           +" ["+j.getJugador().getPosicion()
-                           +"] "+j.getNombre()
-                           +" "+j.getHora());
-                  ArchivoController.ac.jugadas.add(j);
-               }
-               jListJugadas.setModel(modeloC);
-               return true;
-           }else{
-               JOptionPane.showMessageDialog(this, "Error: El archivo no se encuentra en el formato adecuado");
-           }
-    
-        }else{
-            JOptionPane.showMessageDialog(this, "Error: El archivo no es valido");
-        }
-        
-        return false;
-    }
-    
     //=================================CODIGO TAB GUARDAR============================
     public void mostrarDatosD(){
         jLTitulo.setText(juego.getTitulo());
@@ -473,41 +385,18 @@ public class Subir extends javax.swing.JFrame {
         jLEstadio.setText(juego.getEstadio());
     }
 
-    public boolean terminarProceso() throws IOException{
-        //....................................
-        juego.setJugadas(jugadas);
-        ArchivoController.ac.juegos.put(juego.getCod(), juego);
+    public boolean terminarProceso(){
         
-        ArchivoController.ac.actJuegos();
-        ArchivoController.ac.actJugadas();
+        // Guardar partido en los archivos
+        // Cargar nuevamente los arreglos de menu
         
         if(true){
-            JOptionPane.showMessageDialog(this, "Partido guardado correctamente");
+            JOptionPane.showConfirmDialog(this, "Partido guardado correctamente");
             return true;
         }else{
-            JOptionPane.showMessageDialog(this, "Ha ocurrido un error al momento de guardar");
+            JOptionPane.showConfirmDialog(this, "Ha ocurrido un error al momento de guardar");
             return false;
         }
-    }
-    
-    public void asignarListeners(){
-        //Campos solo digitos
-        jHora1.addKeyListener(new onlyDigitsListener(jHora1,2));
-        jMinuto1.addKeyListener(new onlyDigitsListener(jMinuto1,2));
-        jSegundo1.addKeyListener(new onlyDigitsListener(jSegundo1,2));
-        jHora2.addKeyListener(new onlyDigitsListener(jHora2,2));
-        jMinuto2.addKeyListener(new onlyDigitsListener(jMinuto2,2));
-        jSegundo2.addKeyListener(new onlyDigitsListener(jSegundo2,2));
-        jMinuto3.addKeyListener(new onlyDigitsListener(jMinuto3,2));
-        jSegundo3.addKeyListener(new onlyDigitsListener(jSegundo3,2));
-        
-        jPuntajeA.addKeyListener(new onlyDigitsListener(jPuntajeA, 3));
-        jPuntajeB.addKeyListener(new onlyDigitsListener(jPuntajeB, 3));
-        
-        //campos solo letras
-        jLugar.addKeyListener(new onlyLettersListener(jLugar, 40));
-        jEstadio.addKeyListener(new onlyLettersListener(jEstadio, 40));
-        jArbitro.addKeyListener(new onlyLettersListener(jArbitro, 40));
     }
 
     /**
@@ -520,7 +409,7 @@ public class Subir extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -550,11 +439,6 @@ public class Subir extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jLugar = new javax.swing.JTextField();
-        jEstadio = new javax.swing.JTextField();
-        jArbitro = new javax.swing.JTextField();
-        jPuntajeA = new javax.swing.JTextField();
-        jPuntajeB = new javax.swing.JTextField();
         jHora1 = new javax.swing.JTextField();
         jMinuto1 = new javax.swing.JTextField();
         jSegundo1 = new javax.swing.JTextField();
@@ -567,43 +451,36 @@ public class Subir extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jSegundo2 = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
-        jFecha = new com.toedter.calendar.JDateChooser();
         jErrorB = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jFecha = new com.toedter.calendar.JDateChooser();
+        jArbitro = new javax.swing.JTextField();
+        jEstadio = new javax.swing.JTextField();
+        jLugar = new javax.swing.JTextField();
+        jPuntajeA = new javax.swing.JTextField();
+        jPuntajeB = new javax.swing.JTextField();
         jSiguienteB = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jListJugadas = new javax.swing.JList<>();
-        jLabel22 = new javax.swing.JLabel();
-        jLimpiarJugadas = new javax.swing.JButton();
-        jEliminarJugada = new javax.swing.JButton();
-        jLabel23 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jAgregarJugada = new javax.swing.JButton();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
-        jComboEquipo = new javax.swing.JComboBox<>();
-        jComboJugador = new javax.swing.JComboBox<>();
-        jComboJugadas = new javax.swing.JComboBox<>();
-        jMinuto3 = new javax.swing.JTextField();
-        jLabel29 = new javax.swing.JLabel();
-        jSegundo3 = new javax.swing.JTextField();
-        jErrorC = new javax.swing.JLabel();
-        jLabel47 = new javax.swing.JLabel();
-        jButton12 = new javax.swing.JButton();
-        jFinPartido = new javax.swing.JButton();
-        jCargarJugadas = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSiguienteC = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         jButton14 = new javax.swing.JButton();
         jProgressBar3 = new javax.swing.JProgressBar();
+        imagenLabel = new javax.swing.JLabel();
+        iniciarPartido = new javax.swing.JButton();
+        acabarReanudar = new javax.swing.JButton();
+        acabarPartido = new javax.swing.JButton();
+        tiempoFuera = new javax.swing.JButton();
+        guardarTiempo = new javax.swing.JButton();
+        jLabel48 = new javax.swing.JLabel();
+        cronometroLabel = new javax.swing.JLabel();
+        jComboJugador = new javax.swing.JComboBox<>();
+        jComboEquipo = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaJugadas = new javax.swing.JTable();
+        jComboJugada = new javax.swing.JComboBox<>();
+        registrarJugada = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
@@ -631,7 +508,7 @@ public class Subir extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tabbedPane.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -702,23 +579,23 @@ public class Subir extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(122, 122, 122)
+                        .addGap(107, 107, 107)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(130, 130, 130)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jComboEquipoA, 0, 257, Short.MAX_VALUE)
-                                    .addComponent(jComboEquipoB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jComboEquipoA, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboEquipoB, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton1))
-                            .addComponent(jErrorA, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(jLabel3)))
+                            .addComponent(jErrorA, javax.swing.GroupLayout.Alignment.LEADING))))
                 .addContainerGap(146, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -726,20 +603,20 @@ public class Subir extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel3)
-                .addGap(18, 18, 18)
+                .addGap(35, 35, 35)
                 .addComponent(jErrorA)
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jComboEquipoA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboEquipoB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(18, 18, 18)
+                .addGap(45, 45, 45)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addGap(81, 81, 81))
         );
 
         jSiguienteA.setText("Siguiente");
@@ -781,16 +658,16 @@ public class Subir extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jSiguienteA)
                         .addComponent(jButton8))
                     .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Equipos", jPanel1);
+        tabbedPane.addTab("Equipos", jPanel1);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(754, 365));
 
@@ -878,13 +755,6 @@ public class Subir extends javax.swing.JFrame {
         jErrorB.setForeground(new java.awt.Color(255, 0, 0));
         jErrorB.setText("jLabel48");
 
-        jButton3.setText("Guardar datos");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         jButton7.setText("Limpiar campos");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -898,73 +768,66 @@ public class Subir extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                                        .addComponent(jLabel12)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(jPanel8Layout.createSequentialGroup()
-                                        .addComponent(jLabel13)
-                                        .addGap(20, 20, 20)))
-                                .addGap(2, 2, 2)
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jArbitro, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel14)
-                                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPuntajeB, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                                    .addComponent(jPuntajeA)))
-                            .addComponent(jErrorB)
-                            .addGroup(jPanel8Layout.createSequentialGroup()
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel11)
-                                    .addComponent(jLabel8))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel8Layout.createSequentialGroup()
-                                        .addComponent(jHora2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jMinuto2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(1, 1, 1)
-                                        .addComponent(jLabel20)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jSegundo2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel21))
-                                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jFecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                            .addComponent(jButton7)
+                            .addGap(80, 80, 80))
+                        .addGroup(jPanel8Layout.createSequentialGroup()
+                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel8Layout.createSequentialGroup()
+                                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel11)
+                                        .addComponent(jLabel8))
+                                    .addGap(17, 17, 17)
+                                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel8Layout.createSequentialGroup()
-                                            .addComponent(jHora1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jHora2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jMinuto1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jMinuto2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(1, 1, 1)
-                                            .addComponent(jLabel16)
+                                            .addComponent(jLabel20)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jSegundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jSegundo2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jLabel18)))
-                                    .addComponent(jLugar))))
-                        .addGap(35, 35, 35)))
-                .addContainerGap())
+                                            .addComponent(jLabel21))
+                                        .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLugar, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jArbitro, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel8Layout.createSequentialGroup()
+                                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel14)
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jPuntajeB, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jPuntajeA, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jErrorB)
+                                .addGroup(jPanel8Layout.createSequentialGroup()
+                                    .addComponent(jLabel9)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jHora1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jMinuto1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(1, 1, 1)
+                                    .addComponent(jLabel16)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jSegundo1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel18)))
+                            .addGap(45, 45, 45)))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(325, 325, 325))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addGap(327, 327, 327))))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -973,7 +836,7 @@ public class Subir extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel8)
                     .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jHora1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -982,7 +845,7 @@ public class Subir extends javax.swing.JFrame {
                     .addComponent(jLabel16)
                     .addComponent(jLabel17)
                     .addComponent(jLabel18))
-                .addGap(2, 2, 2)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jHora2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -992,37 +855,31 @@ public class Subir extends javax.swing.JFrame {
                         .addComponent(jLabel19)
                         .addComponent(jLabel21))
                     .addComponent(jLabel10))
-                .addGap(6, 6, 6)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jLugar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(jEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jArbitro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel14)
-                            .addComponent(jPuntajeA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15)
-                            .addComponent(jPuntajeB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jErrorB)
-                        .addContainerGap(31, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton7))
-                        .addContainerGap())))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(jPuntajeA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(jPuntajeB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jErrorB)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton7)
+                .addGap(34, 34, 34))
         );
 
         jSiguienteB.setText("Siguiente");
@@ -1063,14 +920,12 @@ public class Subir extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(93, 93, 93))
-                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
                         .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)
@@ -1086,209 +941,20 @@ public class Subir extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jSiguienteB)
                         .addComponent(jButton4)
                         .addComponent(jButton5)))
-                .addContainerGap())
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Partido", jPanel2);
-
-        jListJugadas.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jListJugadas);
-
-        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel22.setText("Lista de jugadas");
-
-        jLimpiarJugadas.setText("Limpiar");
-        jLimpiarJugadas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jLimpiarJugadasActionPerformed(evt);
-            }
-        });
-
-        jEliminarJugada.setText("Eliminar");
-        jEliminarJugada.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jEliminarJugadaActionPerformed(evt);
-            }
-        });
-
-        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel23.setText("4. Registre las jugadas ocurridas en el partido");
-
-        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jAgregarJugada.setText("Agregar jugada");
-        jAgregarJugada.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAgregarJugadaActionPerformed(evt);
-            }
-        });
-
-        jLabel24.setText("Seleccione el equipo:");
-
-        jLabel25.setText("Seleccione el jugador:");
-
-        jLabel26.setText("Seleccione la jugada:");
-
-        jLabel27.setText("Tiempo de la jugada:");
-
-        jComboEquipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboEquipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboEquipoActionPerformed(evt);
-            }
-        });
-
-        jComboJugador.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboJugador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboJugadorActionPerformed(evt);
-            }
-        });
-
-        jComboJugadas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboJugadas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboJugadasActionPerformed(evt);
-            }
-        });
-
-        jLabel29.setText(":");
-
-        jErrorC.setForeground(new java.awt.Color(255, 0, 0));
-        jErrorC.setText("jLabel47");
-
-        jLabel47.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel47.setText("(mm/ss)");
-
-        jButton12.setText("Borrar");
-        jButton12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton12ActionPerformed(evt);
-            }
-        });
-
-        jFinPartido.setText("Fin del partido");
-        jFinPartido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jFinPartidoActionPerformed(evt);
-            }
-        });
-
-        jCargarJugadas.setText("Cargar jugadas desde archivo");
-        jCargarJugadas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCargarJugadasActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                                .addComponent(jLabel25)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboJugador, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                                .addComponent(jLabel26)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboJugadas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
-                                .addComponent(jLabel24)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboEquipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel7Layout.createSequentialGroup()
-                                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                                .addGap(9, 9, 9)
-                                                .addComponent(jErrorC))
-                                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                                .addComponent(jLabel27)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jMinuto3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel29)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jSegundo3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel47)))
-                                        .addGap(0, 31, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jCargarJugadas)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jFinPartido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jAgregarJugada, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 8, Short.MAX_VALUE))
-                    .addComponent(jSeparator1))
-                .addContainerGap())
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel24)
-                            .addComponent(jComboEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel25))
-                    .addComponent(jComboJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel26)
-                    .addComponent(jComboJugadas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel27)
-                    .addComponent(jMinuto3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel29)
-                    .addComponent(jSegundo3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel47)
-                    .addComponent(jButton12))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jAgregarJugada)
-                    .addComponent(jErrorC))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jFinPartido)
-                    .addComponent(jCargarJugadas))
-                .addContainerGap())
-        );
-
-        jSiguienteC.setText("Siguiente");
-        jSiguienteC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jSiguienteCActionPerformed(evt);
-            }
-        });
+        tabbedPane.addTab("Partido", jPanel2);
 
         jButton13.setText("Volver");
         jButton13.addActionListener(new java.awt.event.ActionListener() {
@@ -1306,70 +972,196 @@ public class Subir extends javax.swing.JFrame {
 
         jProgressBar3.setValue(60);
 
+        imagenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/canchaFutbol.png"))); // NOI18N
+        imagenLabel.setText("jLabel1");
+
+        iniciarPartido.setText("Iniciar");
+        iniciarPartido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                iniciarPartidoActionPerformed(evt);
+            }
+        });
+
+        acabarReanudar.setText("Acabar tiempo");
+        acabarReanudar.setEnabled(false);
+        acabarReanudar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acabarReanudarActionPerformed(evt);
+            }
+        });
+
+        acabarPartido.setText("Acabar partido");
+        acabarPartido.setEnabled(false);
+        acabarPartido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acabarPartidoActionPerformed(evt);
+            }
+        });
+
+        tiempoFuera.setText("Tiempo fuera");
+        tiempoFuera.setEnabled(false);
+        tiempoFuera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tiempoFueraActionPerformed(evt);
+            }
+        });
+
+        guardarTiempo.setText("Guardar tiempo");
+        guardarTiempo.setEnabled(false);
+        guardarTiempo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarTiempoActionPerformed(evt);
+            }
+        });
+
+        jLabel48.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel48.setText("(mm/ss)");
+
+        cronometroLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        cronometroLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cronometroLabel.setText("00 : 00");
+
+        jComboJugador.setEnabled(false);
+        jComboJugador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboJugadorActionPerformed(evt);
+            }
+        });
+
+        jComboEquipo.setEnabled(false);
+        jComboEquipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboEquipoActionPerformed(evt);
+            }
+        });
+
+        tablaJugadas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Equipo", "Jugador", "Jugada", "Tiempo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(tablaJugadas);
+
+        jComboJugada.setEnabled(false);
+        jComboJugada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboJugadaActionPerformed(evt);
+            }
+        });
+
+        registrarJugada.setText("Registrar jugada");
+        registrarJugada.setEnabled(false);
+        registrarJugada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registrarJugadaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel22)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jLimpiarJugadas)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jEliminarJugada))
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jComboEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel23)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(cronometroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel48)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(guardarTiempo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tiempoFuera, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11))
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(32, 32, 32))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jComboJugada, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(registrarJugada)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSiguienteC)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton13))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(59, 59, 59))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(23, 23, 23)
+                    .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(iniciarPartido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(acabarReanudar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(acabarPartido, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
+                    .addContainerGap(52, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(194, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(guardarTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tiempoFuera))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel48)
+                        .addComponent(cronometroLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboJugada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(registrarJugada))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel22)
-                            .addComponent(jLabel23))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLimpiarJugadas)
-                                    .addComponent(jEliminarJugada)))
-                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                        .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSiguienteC)
-                            .addComponent(jButton13)
-                            .addComponent(jButton14))))
-                .addContainerGap())
+                    .addComponent(jProgressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton13)
+                        .addComponent(jButton14)))
+                .addGap(26, 26, 26))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(31, 31, 31)
+                            .addComponent(iniciarPartido)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(acabarReanudar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(acabarPartido))
+                        .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap()))
         );
 
-        jTabbedPane1.addTab("Jugadas", jPanel3);
+        tabbedPane.addTab("Jugadas", jPanel3);
 
         jPanel9.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -1431,77 +1223,82 @@ public class Subir extends javax.swing.JFrame {
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGap(106, 106, 106)
+                .addGap(127, 127, 127)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel44)
-                                    .addComponent(j2)
-                                    .addComponent(jLabel42)
-                                    .addComponent(jLabel43)
-                                    .addComponent(j1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLHoraFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLHoraInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLEquipoB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLEquipoA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addGap(32, 32, 32)
-                                .addComponent(jLTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGroup(jPanel10Layout.createSequentialGroup()
-                            .addGap(35, 35, 35)
-                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel46)
-                                .addComponent(jLabel45))
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                            .addGap(15, 15, 15)
+                            .addComponent(jLabel44)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLEstadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLLugar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLHoraFin, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addComponent(jLabel45)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLLugar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel10Layout.createSequentialGroup()
+                                    .addGap(34, 34, 34)
+                                    .addComponent(jLTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel10Layout.createSequentialGroup()
+                                    .addGap(37, 37, 37)
+                                    .addComponent(jLabel46)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jLEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel10Layout.createSequentialGroup()
+                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel43)
+                                .addComponent(jLabel42)
+                                .addComponent(j2)
+                                .addComponent(j1))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLHoraInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLEquipoB, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLEquipoA, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
+                        .addGap(70, 70, 70)
                         .addComponent(jLScore)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
                 .addComponent(jLTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLScore)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLEquipoA)
                     .addComponent(j1))
-                .addGap(14, 14, 14)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLEquipoB)
                     .addComponent(j2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLFecha)
                     .addComponent(jLabel42))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLHoraInicio)
                     .addComponent(jLabel43))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLHoraFin)
                     .addComponent(jLabel44))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLLugar)
                     .addComponent(jLabel45))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLEstadio)
                     .addComponent(jLabel46))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
@@ -1522,7 +1319,7 @@ public class Subir extends javax.swing.JFrame {
                 .addComponent(jLabel30)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         jButton15.setText("Terminar");
@@ -1554,7 +1351,7 @@ public class Subir extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jProgressBar4, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1564,7 +1361,7 @@ public class Subir extends javax.swing.JFrame {
                         .addComponent(jButton16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton15)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1581,19 +1378,17 @@ public class Subir extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Guardar", jPanel6);
+        tabbedPane.addTab("Guardar", jPanel6);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1))
+            .addComponent(tabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(tabbedPane)
         );
 
         pack();
@@ -1616,15 +1411,27 @@ public class Subir extends javax.swing.JFrame {
     }//GEN-LAST:event_jHora2ActionPerformed
 
     private void jSiguienteAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSiguienteAActionPerformed
-        jTabbedPane1.setSelectedIndex(1);
+        tabbedPane.setSelectedIndex(1);
     }//GEN-LAST:event_jSiguienteAActionPerformed
 
     private void jSiguienteBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSiguienteBActionPerformed
-         jTabbedPane1.setSelectedIndex(2);
+        if(comprobarCampos()){      
+            horaInicio = jHora1.getText()+":"+jMinuto1.getText()+":"+jSegundo1.getText();
+            horaFin = jHora2.getText()+":"+jMinuto2.getText()+":"+jSegundo2.getText();
+            fecha = jFecha.getDate().toString();
+            
+            iniciarTabJugadas();
+            asignarCampos();
+            
+            cambiarEstadoTab(2, true);
+            tabbedPane.setSelectedIndex(2);
+        }else{
+            cambiarEstadoTab(2, false);
+        } 
     }//GEN-LAST:event_jSiguienteBActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jTabbedPane1.setSelectedIndex(0);
+        tabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -1639,20 +1446,6 @@ public class Subir extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        Menu menu = new Menu();
-        menu.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton14ActionPerformed
-
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-         jTabbedPane1.setSelectedIndex(1);
-    }//GEN-LAST:event_jButton13ActionPerformed
-
-    private void jSiguienteCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSiguienteCActionPerformed
-        jTabbedPane1.setSelectedIndex(3);
-    }//GEN-LAST:event_jSiguienteCActionPerformed
-
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
         Menu menu = new Menu();
         menu.setVisible(true);
@@ -1660,127 +1453,121 @@ public class Subir extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-        jTabbedPane1.setSelectedIndex(2);
+        tabbedPane.setSelectedIndex(2);
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         try {
-            if(terminarProceso()){
-                this.dispose();
-            }
+            ArchivoController.ac.actJuegos();
         } catch (IOException ex) {
-            Logger.getLogger(Subir.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Iniciar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            ArchivoController.ac.actJugadas();
+        } catch (IOException ex) {
+            Logger.getLogger(Iniciar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton15ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if(comprobarCampos()){      
-            horaInicio = jHora1.getText()+":"+jMinuto1.getText()+":"+jSegundo1.getText();
-            horaFin = jHora2.getText()+":"+jMinuto2.getText()+":"+jSegundo2.getText();
-            fecha = df.format(jFecha.getDate());
-            
-            iniciarTabJugadas();
-            asignarCampos();
-            
-            cambiarEstadoTab(2, true);
-            jSiguienteB.setEnabled(true);
-        }else{
-            cambiarEstadoTab(2, false);
-            jSiguienteB.setEnabled(false);
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         inicializarCamposB();
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void jComboJugadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboJugadasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboJugadasActionPerformed
-
-    private void jAgregarJugadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAgregarJugadaActionPerformed
-        if(comprobarCamposC()){
-            agregarJugada();
-        }
-    }//GEN-LAST:event_jAgregarJugadaActionPerformed
-
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        iniciarCamposC();
-    }//GEN-LAST:event_jButton12ActionPerformed
-
-    private void jLimpiarJugadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLimpiarJugadasActionPerformed
-       iniciarLista();
-    }//GEN-LAST:event_jLimpiarJugadasActionPerformed
-
-    private void jEliminarJugadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEliminarJugadaActionPerformed
-       eliminarJugada(jListJugadas.getSelectedIndex());
-    }//GEN-LAST:event_jEliminarJugadaActionPerformed
-
-    private void jFinPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFinPartidoActionPerformed
-     if(!finalizado){
-        if(jListJugadas.getModel().getSize()>1){
-             agregarFin();
-             jAgregarJugada.setEnabled(false);
-             jLimpiarJugadas.setEnabled(false);
-             jEliminarJugada.setEnabled(false);
-             jCargarJugadas.setEnabled(false);
-             cambiarEstadoTab(3, true);
-             jSiguienteC.setEnabled(true);
-             finalizado = true;
-             jFinPartido.setText("Cancelar Finalizacion");
-             
-             mostrarDatosD();
-        }else{
-            mostrarErrorC(2);
-        }
-     }else{
-         jAgregarJugada.setEnabled(true);
-         jLimpiarJugadas.setEnabled(true);
-         jEliminarJugada.setEnabled(true);
-         jSiguienteC.setEnabled(false);
-         jCargarJugadas.setEnabled(true);
-         cambiarEstadoTab(3, false);
-         quitarFin();
-         finalizado = false;
-         jFinPartido.setText("Fin del partido");
-     }
-    }//GEN-LAST:event_jFinPartidoActionPerformed
-
-    private void jComboEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEquipoActionPerformed
-        cargarComboBoxJugadores();
-    }//GEN-LAST:event_jComboEquipoActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Equipos frameEquipos = new Equipos(this);
-        frameEquipos.setVisible(true);
-        frameEquipos.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        frameEquipos.addWindowListener(new WindowCloseListener(frameEquipos));
+        Equipos equipos = new Equipos(this);
+        equipos.setVisible(true);
         this.setEnabled(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        tabbedPane.setSelectedIndex(1);
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void iniciarPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarPartidoActionPerformed
+        iniciarPartido.setEnabled(false);
+        acabarReanudar.setEnabled(true);
+        acabarPartido.setEnabled(true);
+        guardarTiempo.setEnabled(true);
+        tiempoFuera.setEnabled(true);
+        cronometro.iniciar();
+    }//GEN-LAST:event_iniciarPartidoActionPerformed
+
+    private void acabarReanudarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acabarReanudarActionPerformed
+        if(acabarReanudar.getText().equals("Acabar tiempo")){
+            acabarReanudar.setText("Reanudar tiempo");
+            guardarTiempo.setEnabled(false);
+            acabarPartido.setEnabled(false);
+            tiempoFuera.setEnabled(false);
+        }else{
+            acabarReanudar.setText("Acabar tiempo");
+            guardarTiempo.setEnabled(true);
+            tiempoFuera.setEnabled(true);
+            acabarPartido.setEnabled(true);
+        }
+
+    }//GEN-LAST:event_acabarReanudarActionPerformed
+
+    private void acabarPartidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acabarPartidoActionPerformed
+        cambiarEstadoTab(3, true);
+        tabbedPane.setSelectedIndex(3);
+    }//GEN-LAST:event_acabarPartidoActionPerformed
+
+    private void tiempoFueraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tiempoFueraActionPerformed
+        if(tiempoFuera.getText().equals("Tiempo fuera")){
+            guardarTiempo.setEnabled(false);
+            jComboEquipo.setEnabled(false);
+            jComboJugador.setEnabled(false);
+            jComboJugada.setEnabled(false);
+            registrarJugada.setEnabled(false);
+            tiempoFuera.setText("Reanudar tiempo");
+        }else{
+            guardarTiempo.setEnabled(true);
+            tiempoFuera.setText("Tiempo fuera");
+        }
+    }//GEN-LAST:event_tiempoFueraActionPerformed
+
+    private void guardarTiempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarTiempoActionPerformed
+        cargarComboBoxEquipos();
+        jComboEquipo.setEnabled(true);
+    }//GEN-LAST:event_guardarTiempoActionPerformed
+
     private void jComboJugadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboJugadorActionPerformed
-        // TODO add your handling code here:
+        if(jComboJugador.getSelectedIndex() == 0){
+            registrarJugada.setEnabled(false);
+        }else{
+            cargarJugadasComboBox();
+            jComboJugada.setEnabled(true);
+        }
     }//GEN-LAST:event_jComboJugadorActionPerformed
 
-    private void jCargarJugadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCargarJugadasActionPerformed
-        if(cargarArchivoJugadas()){
-            jFinPartido.setEnabled(false);
-            cambiarEstadoTab(3, true);
-            jSiguienteC.setEnabled(true);
-            jAgregarJugada.setEnabled(false);
-            jEliminarJugada.setEnabled(false);
-            jLimpiarJugadas.setEnabled(false);
+    private void jComboEquipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboEquipoActionPerformed
+        if(jComboEquipo.getSelectedIndex() == 0){
+            jComboJugador.setEnabled(false);
+            jComboJugada.setEnabled(false);
+            registrarJugada.setEnabled(false);
         }else{
-            iniciarLista();
-            jAgregarJugada.setEnabled(true);
-            jEliminarJugada.setEnabled(true);
-            jLimpiarJugadas.setEnabled(true);
-            jFinPartido.setEnabled(true);
-            cambiarEstadoTab(3, false);
-            jSiguienteC.setEnabled(false);
+            cargarJugadorComboBox();
+            jComboJugador.setEnabled(true);
         }
-    }//GEN-LAST:event_jCargarJugadasActionPerformed
+    }//GEN-LAST:event_jComboEquipoActionPerformed
 
+    private void jComboJugadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboJugadaActionPerformed
+        registrarJugada.setEnabled(true);
+    }//GEN-LAST:event_jComboJugadaActionPerformed
+
+    private void registrarJugadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarJugadaActionPerformed
+        agregarJugada();
+        jComboEquipo.setEnabled(false);
+        jComboJugador.setEnabled(false);
+        jComboJugada.setEnabled(false);
+        registrarJugada.setEnabled(false);
+    }//GEN-LAST:event_registrarJugadaActionPerformed
 
 
     /**
@@ -1795,55 +1582,60 @@ public class Subir extends javax.swing.JFrame {
        try {
             javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }  catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Subir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Iniciar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Subir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Iniciar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Subir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Iniciar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Subir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Iniciar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Subir().setVisible(true);
+                new Iniciar().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton acabarPartido;
+    private javax.swing.JButton acabarReanudar;
+    private javax.swing.JLabel cronometroLabel;
+    private javax.swing.JButton guardarTiempo;
+    private javax.swing.JLabel imagenLabel;
+    private javax.swing.JButton iniciarPartido;
     private javax.swing.JLabel j1;
     private javax.swing.JLabel j2;
-    private javax.swing.JButton jAgregarJugada;
     private javax.swing.JTextField jArbitro;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jCargarJugadas;
     private javax.swing.JComboBox<String> jComboEquipo;
     private javax.swing.JComboBox<String> jComboEquipoA;
     private javax.swing.JComboBox<String> jComboEquipoB;
-    private javax.swing.JComboBox<String> jComboJugadas;
+    private javax.swing.JComboBox<String> jComboJugada;
     private javax.swing.JComboBox<String> jComboJugador;
-    private javax.swing.JButton jEliminarJugada;
     private javax.swing.JLabel jErrorA;
     private javax.swing.JLabel jErrorB;
-    private javax.swing.JLabel jErrorC;
     private javax.swing.JTextField jEstadio;
     private com.toedter.calendar.JDateChooser jFecha;
-    private javax.swing.JButton jFinPartido;
     private javax.swing.JTextField jHora1;
     private javax.swing.JTextField jHora2;
     private javax.swing.JLabel jLEquipoA;
@@ -1869,13 +1661,6 @@ public class Subir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
@@ -1884,18 +1669,15 @@ public class Subir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JButton jLimpiarJugadas;
-    private javax.swing.JList<String> jListJugadas;
     private javax.swing.JTextField jLugar;
     private javax.swing.JTextField jMinuto1;
     private javax.swing.JTextField jMinuto2;
-    private javax.swing.JTextField jMinuto3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
@@ -1903,7 +1685,6 @@ public class Subir extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JProgressBar jProgressBar1;
@@ -1913,16 +1694,16 @@ public class Subir extends javax.swing.JFrame {
     private javax.swing.JTextField jPuntajeA;
     private javax.swing.JTextField jPuntajeB;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jSegundo1;
     private javax.swing.JTextField jSegundo2;
-    private javax.swing.JTextField jSegundo3;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton jSiguienteA;
     private javax.swing.JButton jSiguienteB;
-    private javax.swing.JButton jSiguienteC;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTablePartidos;
+    private javax.swing.JButton registrarJugada;
+    private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JTable tablaJugadas;
+    private javax.swing.JButton tiempoFuera;
     // End of variables declaration//GEN-END:variables
 }
