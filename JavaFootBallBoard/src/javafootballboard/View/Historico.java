@@ -31,6 +31,7 @@ public class Historico extends javax.swing.JFrame {
     public Historico() {
         initComponents();
         mostrarJuegos();
+        obtenerFilaActiva();
         
         
           
@@ -65,12 +66,14 @@ public class Historico extends javax.swing.JFrame {
         arbitroLabel = new javax.swing.JLabel();
         estadioLabel = new javax.swing.JLabel();
         equipoBLabel = new javax.swing.JLabel();
-        puntacionALabel = new javax.swing.JLabel();
+        puntuacionALabel = new javax.swing.JLabel();
         puntuacionBLabel = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaJugadas = new javax.swing.JTable();
         puntacionALabel1 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         jLabel7.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
         jLabel7.setText("Fecha");
@@ -88,7 +91,7 @@ public class Historico extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tablaJuegos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -165,8 +168,8 @@ public class Historico extends javax.swing.JFrame {
         equipoBLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
         equipoBLabel.setText("Equipo B");
 
-        puntacionALabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
-        puntacionALabel.setText("Puntuacion A");
+        puntuacionALabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        puntuacionALabel.setText("Puntuacion A");
 
         puntuacionBLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
         puntuacionBLabel.setText("Puntuacion B");
@@ -232,7 +235,7 @@ public class Historico extends javax.swing.JFrame {
                                 .addComponent(equipoALabel))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(245, 245, 245)
-                                .addComponent(puntacionALabel)))
+                                .addComponent(puntuacionALabel)))
                         .addGap(328, 328, 328)
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,7 +277,7 @@ public class Historico extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(equipoALabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(puntacionALabel)
+                                .addComponent(puntuacionALabel)
                                 .addGap(7, 7, 7))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(equipoBLabel)
@@ -297,18 +300,40 @@ public class Historico extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Detalle de partido", jPanel2);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setText("Seleccione un partido para ver los detalles");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setText("Partidos Pasados");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(529, 529, 529)
+                    .addComponent(jLabel2)
+                    .addContainerGap(759, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(116, Short.MAX_VALUE)
+                .addContainerGap(81, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(21, 21, 21)
+                    .addComponent(jLabel2)
+                    .addContainerGap(485, Short.MAX_VALUE)))
         );
 
         pack();
@@ -316,6 +341,7 @@ public class Historico extends javax.swing.JFrame {
 
   /*===============Declaracion de Variables globales=========================*/
     String claveJuegos[]; //Almacena los codigos de los juegos activos
+    int size = ArchivoController.ac.juegos.size();
     
     
     
@@ -331,7 +357,7 @@ public class Historico extends javax.swing.JFrame {
        tablaJuegos.setCellSelectionEnabled(false);
        tablaJuegos.setColumnSelectionAllowed(false);
        int fila = 0;
-       claveJuegos = new String[ ArchivoController.ac.juegos.size()];
+       claveJuegos = new String[size];
      
        
         for( Map.Entry<String, Juego> juegoKey : ArchivoController.ac.juegos.entrySet()) {
@@ -362,9 +388,9 @@ public class Historico extends javax.swing.JFrame {
          modeloSeleccionTabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
          modeloSeleccionTabla.addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event){
-                 if (tablaJuegos.getSelectedRow() > -1) {
+                 if (tablaJuegos.getSelectedRow() < size) {
             // print first column value from selected row
-            System.out.println(tablaJuegos.getSelectedRow());
+            mostrarJugadas(claveJuegos[tablaJuegos.getSelectedRow()]);
         }
                 
             }
@@ -380,15 +406,25 @@ public class Historico extends javax.swing.JFrame {
        int fila = 0;
        Juego juego = ArchivoController.ac.juegos.get(codJuego);
        partidoLabel.setText(juego.getTitulo());
-       estadioLabel.setText(juego.getEstadio());
-       ciudadLabel
+       estadioLabel.setText("Estadio: "+juego.getEstadio());
+       ciudadLabel.setText("Ciudad: "+juego.getCiudad());
+       fechaLabel.setText("Fecha: "+juego.getFecha());
+       arbitroLabel.setText("Arbitro: "+juego.getArbitro());
+       inicioLabel.setText("Inicio: "+juego.getHoraInicio());
+       finLabel.setText("Fin: "+juego.getHoraFin());
+       equipoALabel.setText(juego.getEquipoA().getNombre());
+       puntuacionALabel.setText("Puntaje: "+Integer.toString(juego.getPuntosA()));
+       equipoBLabel.setText(juego.getEquipoB().getNombre());
+       puntuacionBLabel.setText("Puntaje: "+Integer.toString(juego.getPuntosB()));
+       
+       
        
         for( Jugada jugada : juego.getJugadas()) {
                         
             modeloTablaJugadas.insertRow(fila, new Object[]{});
             modeloTablaJugadas.setValueAt(jugada.getNombre(), fila, 0);
-            modeloTablaJugadas.setValueAt(jugada.getJugador(), fila, 1);
-            modeloTablaJugadas.setValueAt(jugada.getEquipo(), fila, 2);
+            modeloTablaJugadas.setValueAt(jugada.getJugador().getNombre() + " " + jugada.getJugador().getApellido(), fila, 1);
+            modeloTablaJugadas.setValueAt(jugada.getEquipo().getNombre(), fila, 2);
             modeloTablaJugadas.setValueAt(jugada.getHora(), fila, 3);
      
             fila++; 
@@ -449,6 +485,8 @@ public class Historico extends javax.swing.JFrame {
     private javax.swing.JLabel fechaLabel;
     private javax.swing.JLabel finLabel;
     private javax.swing.JLabel inicioLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -462,8 +500,8 @@ public class Historico extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel partidoLabel;
-    private javax.swing.JLabel puntacionALabel;
     private javax.swing.JLabel puntacionALabel1;
+    private javax.swing.JLabel puntuacionALabel;
     private javax.swing.JLabel puntuacionBLabel;
     private javax.swing.JTable tablaJuegos;
     private javax.swing.JTable tablaJugadas;
