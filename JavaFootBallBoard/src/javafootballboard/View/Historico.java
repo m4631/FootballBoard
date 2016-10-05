@@ -11,6 +11,7 @@ import static javafootballboard.Controller.ArchivoController.ac;
 import javafootballboard.Controller.Archivos;
 import javafootballboard.Model.Equipo;
 import javafootballboard.Model.Juego;
+import javafootballboard.Model.Jugada;
 import javafootballboard.Model.Jugador;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -44,15 +45,53 @@ public class Historico extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaJuegos = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        equipoALabel = new javax.swing.JLabel();
+        partidoLabel = new javax.swing.JLabel();
+        fechaLabel = new javax.swing.JLabel();
+        ciudadLabel = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JSeparator();
+        inicioLabel = new javax.swing.JLabel();
+        finLabel = new javax.swing.JLabel();
+        arbitroLabel = new javax.swing.JLabel();
+        estadioLabel = new javax.swing.JLabel();
+        equipoBLabel = new javax.swing.JLabel();
+        puntacionALabel = new javax.swing.JLabel();
+        puntuacionBLabel = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaJugadas = new javax.swing.JTable();
+        puntacionALabel1 = new javax.swing.JLabel();
+
+        jLabel7.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        jLabel7.setText("Fecha");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tablaJuegos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
@@ -78,21 +117,198 @@ public class Historico extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tablaJuegos);
         tablaJuegos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1467, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(90, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Listado de Partidos", jPanel1);
+
+        equipoALabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        equipoALabel.setText("Equipo A");
+
+        partidoLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 24)); // NOI18N
+        partidoLabel.setText("Nombre Partido");
+
+        fechaLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        fechaLabel.setText("Fecha");
+
+        ciudadLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        ciudadLabel.setText("Ciudad");
+
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        inicioLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        inicioLabel.setText("Inicio");
+
+        finLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        finLabel.setText("Fin");
+
+        arbitroLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        arbitroLabel.setText("Arbitro");
+
+        estadioLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        estadioLabel.setText("Estadio");
+
+        equipoBLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        equipoBLabel.setText("Equipo B");
+
+        puntacionALabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        puntacionALabel.setText("Puntuacion A");
+
+        puntuacionBLabel.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        puntuacionBLabel.setText("Puntuacion B");
+
+        tablaJugadas.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tablaJugadas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre Jugada", "Jugador ", "Equipo", "Hora"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(tablaJugadas);
+
+        puntacionALabel1.setFont(new java.awt.Font("Tw Cen MT", 1, 18)); // NOI18N
+        puntacionALabel1.setText("Listado de Jugadas");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(estadioLabel)
+                .addGap(119, 119, 119)
+                .addComponent(ciudadLabel)
+                .addGap(215, 215, 215)
+                .addComponent(fechaLabel)
+                .addGap(181, 181, 181)
+                .addComponent(arbitroLabel)
+                .addGap(258, 258, 258)
+                .addComponent(inicioLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 261, Short.MAX_VALUE)
+                .addComponent(finLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
+            .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(603, 603, 603)
+                        .addComponent(puntacionALabel1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(262, 262, 262)
+                                .addComponent(equipoALabel))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(245, 245, 245)
+                                .addComponent(puntacionALabel)))
+                        .addGap(328, 328, 328)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(330, 330, 330)
+                                .addComponent(equipoBLabel))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(313, 313, 313)
+                                .addComponent(puntuacionBLabel))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(588, 588, 588)
+                        .addComponent(partidoLabel))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(275, 275, 275)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 855, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1487, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(partidoLabel)
+                .addGap(25, 25, 25)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ciudadLabel)
+                    .addComponent(arbitroLabel)
+                    .addComponent(fechaLabel)
+                    .addComponent(inicioLabel)
+                    .addComponent(finLabel)
+                    .addComponent(estadioLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(equipoALabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(puntacionALabel)
+                                .addGap(7, 7, 7))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(equipoBLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(puntuacionBLabel))))
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(puntacionALabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(54, 54, 54)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(348, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("Detalle de partido", jPanel2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(116, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -107,13 +323,15 @@ public class Historico extends javax.swing.JFrame {
     
     
     
-    /*Creación de metodo para mostrar todos los juegos Realizados*/
+    /*Metodo para mostrar todos los juegos Realizados*/
     private  void mostrarJuegos(){
         
-        String[][] x = {};
-        DefaultTableModel modeloTablaJuegos  = (DefaultTableModel) tablaJuegos.getModel();
+       DefaultTableModel modeloTablaJuegos  = (DefaultTableModel) tablaJuegos.getModel();
        tablaJuegos.setModel(modeloTablaJuegos);
+       tablaJuegos.setCellSelectionEnabled(false);
+       tablaJuegos.setColumnSelectionAllowed(false);
        int fila = 0;
+       claveJuegos = new String[ ArchivoController.ac.juegos.size()];
      
        
         for( Map.Entry<String, Juego> juegoKey : ArchivoController.ac.juegos.entrySet()) {
@@ -133,17 +351,16 @@ public class Historico extends javax.swing.JFrame {
             modeloTablaJuegos.setValueAt(juego.getHoraInicio(), fila, 8);
             modeloTablaJuegos.setValueAt(juego.getHoraFin(), fila, 9);
             modeloTablaJuegos.setValueAt(juego.getArbitro(), fila, 10);
-            fila++;
             
-             
-           
+            claveJuegos[fila] = juego.getCod();
+            fila++; 
        }
-        
+        tablaJuegos.changeSelection(0, 0, false, false);
     } 
     private void obtenerFilaActiva(){
         ListSelectionModel modeloSeleccionTabla = tablaJuegos.getSelectionModel();
          modeloSeleccionTabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        modeloSeleccionTabla.addListSelectionListener(new ListSelectionListener(){
+         modeloSeleccionTabla.addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event){
                  if (tablaJuegos.getSelectedRow() > -1) {
             // print first column value from selected row
@@ -153,6 +370,32 @@ public class Historico extends javax.swing.JFrame {
             }
         
         });
+    }
+    private void mostrarJugadas(String codJuego){
+        
+       DefaultTableModel modeloTablaJugadas  = (DefaultTableModel) tablaJugadas.getModel();
+       tablaJugadas.setModel(modeloTablaJugadas);
+       tablaJugadas.setCellSelectionEnabled(false);
+       tablaJugadas.setColumnSelectionAllowed(false);
+       int fila = 0;
+       Juego juego = ArchivoController.ac.juegos.get(codJuego);
+       partidoLabel.setText(juego.getTitulo());
+       estadioLabel.setText(juego.getEstadio());
+       ciudadLabel
+       
+        for( Jugada jugada : juego.getJugadas()) {
+                        
+            modeloTablaJugadas.insertRow(fila, new Object[]{});
+            modeloTablaJugadas.setValueAt(jugada.getNombre(), fila, 0);
+            modeloTablaJugadas.setValueAt(jugada.getJugador(), fila, 1);
+            modeloTablaJugadas.setValueAt(jugada.getEquipo(), fila, 2);
+            modeloTablaJugadas.setValueAt(jugada.getHora(), fila, 3);
+     
+            fila++; 
+       }
+        tablaJugadas.changeSelection(0, 0, false, false);
+        
+        
     }
     
     
@@ -198,7 +441,31 @@ public class Historico extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel arbitroLabel;
+    private javax.swing.JLabel ciudadLabel;
+    private javax.swing.JLabel equipoALabel;
+    private javax.swing.JLabel equipoBLabel;
+    private javax.swing.JLabel estadioLabel;
+    private javax.swing.JLabel fechaLabel;
+    private javax.swing.JLabel finLabel;
+    private javax.swing.JLabel inicioLabel;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private static javax.swing.JTable tablaJuegos;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel partidoLabel;
+    private javax.swing.JLabel puntacionALabel;
+    private javax.swing.JLabel puntacionALabel1;
+    private javax.swing.JLabel puntuacionBLabel;
+    private javax.swing.JTable tablaJuegos;
+    private javax.swing.JTable tablaJugadas;
     // End of variables declaration//GEN-END:variables
 }
