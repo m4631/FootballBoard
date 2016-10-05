@@ -357,7 +357,8 @@ public final class Archivos {
 
     public ArrayList<String> convertirAEquiposCSV() {
         ArrayList<String> lineas = new ArrayList<>();
-        for (Map.Entry<String, Equipo> elemento : equipos.entrySet()) {
+        lineas.add("Nombre");
+        for(Map.Entry<String, Equipo> elemento : equipos.entrySet()){
             lineas.add(elemento.getValue().getNombre());
         }
         return lineas;
@@ -365,21 +366,23 @@ public final class Archivos {
 
     public ArrayList<String> convertirAJugadoresCSV() {
         ArrayList<String> lineas = new ArrayList<>();
-        for (Map.Entry<String, Jugador> elemento : jugadores.entrySet()) {
-            lineas.add(elemento.getValue().getNombre() + "," + elemento.getValue().getApellido() + ","
-                    + elemento.getValue().getPosicion() + "," + elemento.getValue().getEquipo().getNombre());
+        lineas.add("Nombre,Apellido,Posicion,Equipo");
+        for(Map.Entry<String, Jugador> elemento : jugadores.entrySet()){
+            lineas.add(elemento.getValue().getNombre()+","+elemento.getValue().getApellido()+","+
+                    elemento.getValue().getPosicion()+","+elemento.getValue().getEquipo().getNombre());
         }
         return lineas;
     }
 
     public ArrayList<String> convertirAJuegosCSV() {
         ArrayList<String> lineas = new ArrayList<>();
-        for (Map.Entry<String, Juego> elemento : juegos.entrySet()) {
-            lineas.add(elemento.getValue().getCod() + "," + elemento.getValue().getTitulo() + ","
-                    + elemento.getValue().getEquipoA().getNombre() + "," + elemento.getValue().getEquipoB().getNombre() + ","
-                    + elemento.getValue().getEstadio() + "," + elemento.getValue().getCiudad() + "," + elemento.getValue().getFecha() + ","
-                    + elemento.getValue().getArbitro() + "," + elemento.getValue().getHoraInicio() + "," + elemento.getValue().getHoraFin()
-                    + "," + elemento.getValue().getPuntosA() + "," + elemento.getValue().getPuntosB()
+        lineas.add("Cod,Titulo,EquipoA,EquipoB,Estadio,Ciudad,Fecha,Arbitro,HoraInicio,HoraFin,PuntuacionA,PuntuacionB");
+        for(Map.Entry<String, Juego> elemento : juegos.entrySet()){
+            lineas.add(elemento.getValue().getCod()+","+elemento.getValue().getTitulo()+","+
+              elemento.getValue().getEquipoA().getNombre()+","+elemento.getValue().getEquipoB().getNombre()+","+
+              elemento.getValue().getEstadio()+","+elemento.getValue().getCiudad()+","+elemento.getValue().getFecha()+","+
+              elemento.getValue().getArbitro()+","+elemento.getValue().getHoraInicio()+","+elemento.getValue().getHoraFin()
+              +","+elemento.getValue().getPuntosA()+","+elemento.getValue().getPuntosB()
             );
 
         }
@@ -388,10 +391,11 @@ public final class Archivos {
 
     public ArrayList<String> convertirAJugadasCSV() {
         ArrayList<String> lineas = new ArrayList<>();
-        for (Jugada jugada : jugadas) {
-            lineas.add(jugada.getJuego().getCod() + "," + jugada.getNombre() + ","
-                    + jugada.getJugador().getNombre() + " " + jugada.getJugador().getApellido() + "," + jugada.getEquipo().getNombre()
-                    + "," + jugada.getHora());
+        lineas.add("Cod. de juego,Nombre de jugada,Jugador,Equipo,Hora");
+        for(Jugada jugada : jugadas){
+            lineas.add(jugada.getJuego().getCod()+","+jugada.getNombre()+","+
+                    jugada.getJugador().getNombre()+" "+jugada.getJugador().getApellido()+","+jugada.getEquipo().getNombre()
+                    +","+jugada.getHora());
         }
         return lineas;
     }
@@ -403,13 +407,13 @@ public final class Archivos {
                 File Equipos = new File(stringEquipos);
                 Equipos.delete();
                 archivoEquipos();
-                FileWriter actEquipos = new FileWriter(stringEquipos);
 
+                FileWriter actEquipos = new FileWriter(stringEquipos);
+                
                 for (String linea : equiposCSV) {
                     actEquipos.append(linea);
                     actEquipos.flush();
                 }
-
                 actEquipos.close();
 
             } catch (SecurityException se) {
