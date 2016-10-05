@@ -27,8 +27,15 @@ public class Archivos {
     private final String stringJugadores = stringFolder + "\\Jugadores.csv";
     
     Path rutaFolder = Paths.get(stringFolder);
-    
-    public Archivos(){
+    private static Archivos instance = null;
+
+    public static Archivos getInstance() {
+        if(instance == null) {
+           instance = new Archivos();
+        }
+        return instance;
+    }
+    protected Archivos(){
         equipos = new HashMap<>();
         jugadores = new HashMap<>();
         juegos = new HashMap<>();
@@ -44,9 +51,12 @@ public class Archivos {
         cargarEquipos();
         cargarJugadores();
         cargarJugadas();
+        
+        cargarDiccionarioJugadas();
     }
     
     public void cargarDiccionarioJugadas(){
+        diccionarioJugadas = new ArrayList<String>();
         diccionarioJugadas.add("Gol");
         diccionarioJugadas.add("Fuera de linea");
         diccionarioJugadas.add("Pase");
