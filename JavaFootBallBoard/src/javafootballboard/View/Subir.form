@@ -1207,6 +1207,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Cargar jugadas desde archivo"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCargarJugadasActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JSeparator" name="jSeparator1">
                 </Component>
