@@ -5,8 +5,11 @@
  */
 package javafootballboard.View;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafootballboard.Controller.ArchivoController;
 import javafootballboard.Model.Equipo;
 import javafootballboard.Model.Jugador;
@@ -305,6 +308,11 @@ public class EquipoRegistro extends javax.swing.JFrame {
         equipoActual.desactivarManual();
         equipoActual.cargarEquipos();
         equipoActual.setEnabled(true);
+        try {
+            ArchivoController.ac.actEquipos();
+        } catch (IOException ex) {
+            Logger.getLogger(EquipoRegistro.class.getName()).log(Level.SEVERE, null, ex);
+        }
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 

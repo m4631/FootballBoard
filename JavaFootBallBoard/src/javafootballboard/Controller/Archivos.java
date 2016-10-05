@@ -30,7 +30,16 @@ public final class Archivos {
 
     Path rutaFolder = Paths.get(stringFolder);
 
-    public Archivos() {
+    private static Archivos instance = null;
+
+    public static Archivos getInstance() {
+        if(instance == null) {
+           instance = new Archivos();
+        }
+        return instance;
+    }
+    
+    protected Archivos(){
         equipos = new HashMap<>();
         jugadores = new HashMap<>();
         juegos = new HashMap<>();
@@ -49,8 +58,8 @@ public final class Archivos {
         cargarJugadas();
         cargarDiccionarioJugadas();
     }
-
-    public void cargarDiccionarioJugadas() {
+    
+    public void cargarDiccionarioJugadas(){
         diccionarioJugadas.add("Gol");
         diccionarioJugadas.add("Fuera de linea");
         diccionarioJugadas.add("Pase");
