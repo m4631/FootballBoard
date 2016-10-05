@@ -261,6 +261,7 @@ public class Subir extends javax.swing.JFrame {
         juego.setTitulo();
         juego.setHoraFin(horaFin);
         juego.setHoraInicio(horaInicio);
+        juego.setCod();
         
     }
     
@@ -364,20 +365,23 @@ public class Subir extends javax.swing.JFrame {
     }
     
     public void agregarJugada(){
+        
+        String[] aux = jComboJugador.getSelectedItem().toString().split(" ");
+        
         modeloC.addElement(jComboEquipo.getSelectedItem().toString()
-                +": "+jComboJugador.getSelectedItem().toString()
+                +": "+aux[0]+" "+aux[1]
                 +" "+jComboJugadas.getSelectedItem().toString()
                 +" "+jMinuto3.getText()+":"+jSegundo3.getText());
         jListJugadas.setModel(modeloC);
         
         jugadas.add(new Jugada(juego, jComboJugadas.getSelectedItem().toString(),
-                              ArchivoController.ac.jugadores.get(jComboJugador.getSelectedItem().toString()), 
+                              ArchivoController.ac.jugadores.get(aux[0]+" "+aux[1]), 
                               ArchivoController.ac.equipos.get(jComboEquipo.getSelectedItem().toString()),
                               jMinuto3.getText()+":"+jSegundo3.getText()));
         
-        ArchivoController.ac.jugadas.add(new Jugada(ArchivoController.ac.juegos.get(juego.getCod()), 
+        ArchivoController.ac.jugadas.add(new Jugada(juego, 
                 jComboJugadas.getSelectedItem().toString(), 
-                ArchivoController.ac.jugadores.get(jComboJugador.getSelectedItem().toString()), 
+                ArchivoController.ac.jugadores.get(aux[0]+" "+aux[1]), 
                 ArchivoController.ac.equipos.get(jComboEquipo.getSelectedItem().toString()),
                 jMinuto3.getText()+":"+jSegundo3.getText()));
        
@@ -386,10 +390,11 @@ public class Subir extends javax.swing.JFrame {
     public void eliminarJugada(int i){
         if(i > 0){
             modeloC.remove(i);
-            jugadas.remove(i);
+            jugadas.remove(i-1);
+            ArchivoController.ac.jugadas.remove(i-1);
             jListJugadas.setModel(modeloC);
         }
-        ArchivoController.ac.jugadas.remove(i);
+        
     }
     
     public void agregarFin(){
@@ -467,8 +472,9 @@ public class Subir extends javax.swing.JFrame {
 
     public boolean terminarProceso() throws IOException{
         //....................................
-        ArchivoController.ac.juegos.put(juego.getCod(), juego);
         juego.setJugadas(jugadas);
+        ArchivoController.ac.juegos.put(juego.getCod(), juego);
+        
         ArchivoController.ac.actJuegos();
         ArchivoController.ac.actJugadas();
         
