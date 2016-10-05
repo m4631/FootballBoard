@@ -32,7 +32,7 @@ public class onlyLettersListener implements KeyListener {
     public void keyTyped(KeyEvent evt) {
         if (campo.getText().length() < maxLenght) {
             char s = evt.getKeyChar();
-            if (!(Character.isLetter(s))) {
+            if (!(Character.isLetter(s)) && s!=' ') {
                 evt.consume();
             }
         } else {

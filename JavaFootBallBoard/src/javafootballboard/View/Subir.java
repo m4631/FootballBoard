@@ -6,6 +6,7 @@
 package javafootballboard.View;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -21,8 +22,11 @@ import javafootballboard.Model.onlyDigitsListener;
 import javafootballboard.Model.onlyLettersListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -42,8 +46,9 @@ public class Subir extends javax.swing.JFrame {
     String fecha;
     String horaInicio;
     String horaFin;
+    DateFormat df = DateFormat.getDateInstance();
     
-    String[] jugadas; // Referencia a template de jugadas
+    ArrayList<Jugada> jugadas; // Referencia a template de jugadas
     String[] columnas; // columnas de la tabla partidos
     
     DefaultComboBoxModel modeloA; // Modelo comboBoxes
@@ -66,6 +71,7 @@ public class Subir extends javax.swing.JFrame {
         iniciarTabla();
         asignarListeners();
         finalizado = false;
+        jugadas = new ArrayList<>();
 
         //Cargando comboBoxes iniciales
         cargarComboBoxes();
@@ -223,6 +229,7 @@ public class Subir extends javax.swing.JFrame {
             mostrarErrorB(1);
             return false;
         }
+        /*
         //Valida que el puntajeA solo contenga numeros
         try{
             Integer.parseInt(jPuntajeA.getText());
@@ -235,6 +242,7 @@ public class Subir extends javax.swing.JFrame {
         }catch(Exception e){
             mostrarErrorB(2);  
         }
+        */
         mostrarErrorB(0);  
         return true;
     }
@@ -254,7 +262,7 @@ public class Subir extends javax.swing.JFrame {
         juego.setCod();
         juego.setHoraFin(horaFin);
         juego.setHoraInicio(horaInicio);
-        ArchivoController.ac.juegos.put(juego.getCod(), juego);
+        
     }
     
     public void iniciarTabla(){
@@ -321,7 +329,7 @@ public class Subir extends javax.swing.JFrame {
     }
     
     public void cargarComboBoxJugadas(){
-        modeloA = new DefaultComboBoxModel( ArchivoController.ac.diccionarioJugadas.toArray() );
+        modeloA = new DefaultComboBoxModel(ArchivoController.ac.diccionarioJugadas.toArray());
         jComboJugadas.setModel(modeloA);
     }
     
@@ -362,6 +370,7 @@ public class Subir extends javax.swing.JFrame {
                 +" "+jComboJugadas.getSelectedItem().toString()
                 +" "+jMinuto3.getText()+":"+jSegundo3.getText());
         jListJugadas.setModel(modeloC);
+
         String thisJugador = jComboJugador.getSelectedItem().toString();
         String partesJugador[] = thisJugador.split(" ");
         
@@ -385,6 +394,7 @@ public class Subir extends javax.swing.JFrame {
     public void eliminarJugada(int i){
         if(i > 0){
             modeloC.remove(i);
+            jugadas.remove(i);
             jListJugadas.setModel(modeloC);
         }
         ArchivoController.ac.jugadas.remove(i);
@@ -402,6 +412,42 @@ public class Subir extends javax.swing.JFrame {
         jListJugadas.setModel(modeloC);
         }
     }
+    
+    public boolean cargarArchivoJugadas() {
+        JFileChooser file = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV files (*csv)", "csv");
+        file.setFileFilter(filter);
+        int result = file.showSaveDialog(null);
+        
+        if (result == JFileChooser.APPROVE_OPTION) {
+           String ruta = file.getSelectedFile().getAbsolutePath();
+           System.out.println(ruta);
+           
+           jugadas = new ArrayList<>();
+           
+           if(ArchivoController.ac.cargarJugadas(ruta, juego, equipoA, equipoB, jugadas)){
+               modeloC.clear();
+               for(Jugada j: jugadas){
+                   modeloC.addElement(j.getEquipo().getNombre()+": "+j.getJugador().getNombre()
+                           +" "+j.getJugador().getApellido()
+                           +" ["+j.getJugador().getPosicion()
+                           +"] "+j.getNombre()
+                           +" "+j.getHora());
+                  ArchivoController.ac.jugadas.add(j);
+               }
+               jListJugadas.setModel(modeloC);
+               return true;
+           }else{
+               JOptionPane.showMessageDialog(this, "Error: El archivo no se encuentra en el formato adecuado");
+           }
+    
+        }else{
+            JOptionPane.showMessageDialog(this, "Error: El archivo no es valido");
+        }
+        
+        return false;
+    }
+    
     //=================================CODIGO TAB GUARDAR============================
     public void mostrarDatosD(){
         jLTitulo.setText(juego.getTitulo());
@@ -427,10 +473,12 @@ public class Subir extends javax.swing.JFrame {
         jLEstadio.setText(juego.getEstadio());
     }
 
-    public boolean terminarProceso(){
-        
-        // Guardar partido en los archivos
-        // Cargar nuevamente los arreglos de menu
+    public boolean terminarProceso() throws IOException{
+        //....................................
+        ArchivoController.ac.juegos.put(juego.getCod(), juego);
+        juego.setJugadas(jugadas);
+        ArchivoController.ac.actJuegos();
+        ArchivoController.ac.actJugadas();
         
         if(true){
             JOptionPane.showMessageDialog(this, "Partido guardado correctamente");
@@ -1140,6 +1188,11 @@ public class Subir extends javax.swing.JFrame {
         });
 
         jCargarJugadas.setText("Cargar jugadas desde archivo");
+        jCargarJugadas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCargarJugadasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -1610,28 +1663,20 @@ public class Subir extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        if(terminarProceso()){
-            try {
-                ArchivoController.ac.actJuegos();
-            } catch (IOException ex) {
-                Logger.getLogger(Subir.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if(terminarProceso()){
+                this.dispose();
             }
-            try {
-                ArchivoController.ac.actJugadas();
-            } catch (IOException ex) {
-                Logger.getLogger(Subir.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            this.dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(Subir.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // TERMINAR EL PROCESO
-        //GUARDAR EL PARTIDO EN LA BD...
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if(comprobarCampos()){      
             horaInicio = jHora1.getText()+":"+jMinuto1.getText()+":"+jSegundo1.getText();
             horaFin = jHora2.getText()+":"+jMinuto2.getText()+":"+jSegundo2.getText();
-            fecha = jFecha.getDate().toString();
+            fecha = df.format(jFecha.getDate());
             
             iniciarTabJugadas();
             asignarCampos();
@@ -1677,6 +1722,7 @@ public class Subir extends javax.swing.JFrame {
              jAgregarJugada.setEnabled(false);
              jLimpiarJugadas.setEnabled(false);
              jEliminarJugada.setEnabled(false);
+             jCargarJugadas.setEnabled(false);
              cambiarEstadoTab(3, true);
              jSiguienteC.setEnabled(true);
              finalizado = true;
@@ -1691,6 +1737,7 @@ public class Subir extends javax.swing.JFrame {
          jLimpiarJugadas.setEnabled(true);
          jEliminarJugada.setEnabled(true);
          jSiguienteC.setEnabled(false);
+         jCargarJugadas.setEnabled(true);
          cambiarEstadoTab(3, false);
          quitarFin();
          finalizado = false;
@@ -1713,6 +1760,26 @@ public class Subir extends javax.swing.JFrame {
     private void jComboJugadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboJugadorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboJugadorActionPerformed
+
+    private void jCargarJugadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCargarJugadasActionPerformed
+        if(cargarArchivoJugadas()){
+            jFinPartido.setEnabled(false);
+            cambiarEstadoTab(3, true);
+            jSiguienteC.setEnabled(true);
+            jAgregarJugada.setEnabled(false);
+            jEliminarJugada.setEnabled(false);
+            jLimpiarJugadas.setEnabled(false);
+        }else{
+            iniciarLista();
+            jAgregarJugada.setEnabled(true);
+            jEliminarJugada.setEnabled(true);
+            jLimpiarJugadas.setEnabled(true);
+            jFinPartido.setEnabled(true);
+            cambiarEstadoTab(3, false);
+            jSiguienteC.setEnabled(false);
+        }
+    }//GEN-LAST:event_jCargarJugadasActionPerformed
+
 
 
     /**
