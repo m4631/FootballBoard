@@ -101,6 +101,14 @@ public class AbrirVistas {
         equipos.addWindowListener(new WindowCloseListener(editJugador));
     }
     
+    public static void jugadasNoClose(Historico historico, int row){
+        Jugadas jugadas = new Jugadas(historico, row);
+        jugadas.setVisible(true);
+        historico.setEnabled(false);
+        historico.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        historico.addWindowListener(new WindowCloseListener(jugadas));
+    }
+    
     public static void historico(Menu menu){
         Historico historico = new Historico();
         historico.setVisible(true);

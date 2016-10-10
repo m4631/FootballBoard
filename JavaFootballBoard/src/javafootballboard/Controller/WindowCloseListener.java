@@ -17,6 +17,7 @@ public class WindowCloseListener extends WindowAdapter{
     Historico historico;
     Formato formato;
     EditJugador editJugador;
+    Jugadas jugadas;
     
     public WindowCloseListener(Object frame){
         if(frame instanceof Equipos){
@@ -31,6 +32,8 @@ public class WindowCloseListener extends WindowAdapter{
             formato = (Formato)frame;
         }else if(frame instanceof EditJugador){
             editJugador = (EditJugador)frame;
+        }else if(frame instanceof Jugadas){
+            jugadas = (Jugadas)frame;
         }
     }
     
@@ -69,6 +72,10 @@ public class WindowCloseListener extends WindowAdapter{
         if(editJugador != null){
             editJugador.equipos.setEnabled(true);
             editJugador.dispose();
+        }
+        if(jugadas != null){
+            jugadas.historico.setEnabled(true);
+            jugadas.dispose();
         }
     }
     

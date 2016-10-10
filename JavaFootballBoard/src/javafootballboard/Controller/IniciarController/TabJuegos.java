@@ -82,11 +82,14 @@ public class TabJuegos {
         iniciarTabla();
         int i = 0;
         for(Map.Entry<String,Juego> partido : DataLocal.juegos.entrySet()){
-            modeloB.insertRow(i, new Object[]{});
-            modeloB.setValueAt(partido.getValue().getTitulo(), i, 0);
-            modeloB.setValueAt(partido.getValue().getPuntosA()+" - "+partido.getValue().getPuntosB(), i, 1);
-            modeloB.setValueAt(partido.getValue().getFecha(), i, 2);
-            i++;
+            if(partido.getValue().getEquipoA() == iniciar.IC.equipoA && partido.getValue().getEquipoB() == iniciar.IC.equipoB ||
+                partido.getValue().getEquipoB() == iniciar.IC.equipoA && partido.getValue().getEquipoA() == iniciar.IC.equipoB){
+                modeloB.insertRow(i, new Object[]{});
+                modeloB.setValueAt(partido.getValue().getTitulo(), i, 0);
+                modeloB.setValueAt(partido.getValue().getPuntosA()+" - "+partido.getValue().getPuntosB(), i, 1);
+                modeloB.setValueAt(partido.getValue().getFecha(), i, 2);
+                i++;
+            }
         }
         iniciar.getJTablePartidos().setModel(modeloB);
     }
