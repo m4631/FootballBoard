@@ -24,7 +24,6 @@ public class TabJuegos {
         this.subir = subir;
         inicializarCamposB();
         iniciarTabla();
-        cargarTabla();
     }
     
     public void iniciarTabla(){

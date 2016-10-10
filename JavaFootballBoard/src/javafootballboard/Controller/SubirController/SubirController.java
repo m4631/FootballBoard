@@ -131,6 +131,7 @@ public class SubirController {
         if(cur+1==1){
             equipoA = DataLocal.getEquipo(subir.getJComboEquipoA().getSelectedItem().toString());
             equipoB = DataLocal.getEquipo(subir.getJComboEquipoB().getSelectedItem().toString());
+            tabJuegos.cargarTabla();
         }else if(cur+1==2){
             crearJuego();
             tabJugadas.iniciarTabJugadas();

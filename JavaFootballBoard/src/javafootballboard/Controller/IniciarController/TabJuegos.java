@@ -20,7 +20,6 @@ public class TabJuegos {
         this.iniciar = iniciar;
         inicializarCamposB();
         iniciarTabla();
-        cargarTabla();
     }
     
     public void iniciarTabla(){

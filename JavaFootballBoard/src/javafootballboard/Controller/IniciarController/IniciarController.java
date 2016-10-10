@@ -119,6 +119,7 @@ public class IniciarController {
         if(cur+1==1){
             equipoA = DataLocal.getEquipo(iniciar.getJComboEquipoA().getSelectedItem().toString());
             equipoB = DataLocal.getEquipo(iniciar.getJComboEquipoB().getSelectedItem().toString());
+            tabJuegos.cargarTabla();
         }else if(cur+1==2){
             tabJugadas.iniciarTabJugadas();
         }else if(cur+1==3){
