@@ -50,7 +50,9 @@ public class Menu extends javax.swing.JFrame {
         jLabel3.setBounds(-30, 130, 180, 170);
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/sport_soccer_16px_578895_easyicon.net.png"))); // NOI18N
         jButton5.setText("Equipos");
+        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -60,6 +62,7 @@ public class Menu extends javax.swing.JFrame {
         jButton5.setBounds(330, 170, 140, 30);
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/soccer_13.837837837838px_553409_easyicon.net.png"))); // NOI18N
         jButton1.setText("Iniciar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -70,6 +73,7 @@ public class Menu extends javax.swing.JFrame {
         jButton1.setBounds(330, 210, 140, 30);
 
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/soccer_13.837837837838px_553151_easyicon.net.png"))); // NOI18N
         jButton3.setText("Histórico");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,6 +84,7 @@ public class Menu extends javax.swing.JFrame {
         jButton3.setBounds(330, 250, 140, 30);
 
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/48_brazil_brazilian_soccer_16px_2687_easyicon.net.png"))); // NOI18N
         jButton4.setText("Subir Archivo");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

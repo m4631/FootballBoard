@@ -453,7 +453,6 @@ public class Iniciar extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         jErrorB = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
-        jFecha = new com.toedter.calendar.JDateChooser();
         jArbitro = new javax.swing.JTextField();
         jEstadio = new javax.swing.JTextField();
         jLugar = new javax.swing.JTextField();
@@ -463,6 +462,7 @@ public class Iniciar extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jLabel22 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButton13 = new javax.swing.JButton();
         jButton14 = new javax.swing.JButton();
@@ -670,12 +670,15 @@ public class Iniciar extends javax.swing.JFrame {
         tabbedPane.addTab("Equipos", jPanel1);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(754, 365));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("2. Verifique que no ha registrado el partido deseado");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 333, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("3. Ingrese los siguientes datos sobre el partido");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(362, 20, -1, -1));
 
         jTablePartidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -689,6 +692,8 @@ public class Iniciar extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTablePartidos);
+
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 41, 331, 385));
 
         jPanel8.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -755,6 +760,7 @@ public class Iniciar extends javax.swing.JFrame {
         jErrorB.setForeground(new java.awt.Color(255, 0, 0));
         jErrorB.setText("jLabel48");
 
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/sport_soccer_16px_578895_easyicon.net.png"))); // NOI18N
         jButton7.setText("Limpiar campos");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -794,7 +800,6 @@ public class Iniciar extends javax.swing.JFrame {
                                             .addComponent(jSegundo2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jLabel21))
-                                        .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLugar, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jArbitro, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -832,10 +837,8 @@ public class Iniciar extends javax.swing.JFrame {
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8)
-                    .addComponent(jFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(jLabel8)
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
@@ -882,12 +885,15 @@ public class Iniciar extends javax.swing.JFrame {
                 .addGap(34, 34, 34))
         );
 
+        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(362, 41, -1, 385));
+
         jSiguienteB.setText("Siguiente");
         jSiguienteB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSiguienteBActionPerformed(evt);
             }
         });
+        jPanel2.add(jSiguienteB, new org.netbeans.lib.awtextra.AbsoluteConstraints(667, 453, -1, -1));
 
         jButton4.setText("Volver");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -895,6 +901,7 @@ public class Iniciar extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(598, 453, -1, -1));
 
         jButton5.setText("Cancelar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -902,57 +909,14 @@ public class Iniciar extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
+        jPanel2.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(517, 453, -1, -1));
 
         jProgressBar1.setValue(25);
+        jPanel2.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 453, 497, 23));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSiguienteB)))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(27, 27, 27)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jSiguienteB)
-                        .addComponent(jButton4)
-                        .addComponent(jButton5)))
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
+        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/WhatsApp Image 2016-10-01 at 23.51.22.jpeg"))); // NOI18N
+        jLabel22.setText("jLabel22");
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 490));
 
         tabbedPane.addTab("Partido", jPanel2);
 
@@ -1635,7 +1599,6 @@ public class Iniciar extends javax.swing.JFrame {
     private javax.swing.JLabel jErrorA;
     private javax.swing.JLabel jErrorB;
     private javax.swing.JTextField jEstadio;
-    private com.toedter.calendar.JDateChooser jFecha;
     private javax.swing.JTextField jHora1;
     private javax.swing.JTextField jHora2;
     private javax.swing.JLabel jLEquipoA;
@@ -1661,6 +1624,7 @@ public class Iniciar extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;

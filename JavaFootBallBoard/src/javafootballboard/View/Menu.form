@@ -56,7 +56,13 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="11" style="1"/>
         </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/javafootballboard/Assets/sport_soccer_16px_578895_easyicon.net.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Equipos"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Default Cursor"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
@@ -71,6 +77,9 @@
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/javafootballboard/Assets/soccer_13.837837837838px_553409_easyicon.net.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Iniciar"/>
       </Properties>
@@ -88,6 +97,9 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="11" style="1"/>
         </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/javafootballboard/Assets/soccer_13.837837837838px_553151_easyicon.net.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Hist&#xf3;rico"/>
       </Properties>
       <Events>
@@ -103,6 +115,9 @@
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/javafootballboard/Assets/48_brazil_brazilian_soccer_16px_2687_easyicon.net.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Subir Archivo"/>
       </Properties>

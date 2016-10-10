@@ -98,6 +98,7 @@ public class Equipos extends javax.swing.JFrame {
         manualMessage = new javax.swing.JLabel();
         nombreEquipo = new javax.swing.JTextField();
         automaticMessage = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -112,6 +113,8 @@ public class Equipos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        panelGeneral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         equiposCargados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 equiposCargadosMouseClicked(evt);
@@ -122,9 +125,11 @@ public class Equipos extends javax.swing.JFrame {
                 equiposCargadosActionPerformed(evt);
             }
         });
+        panelGeneral.add(equiposCargados, new org.netbeans.lib.awtextra.AbsoluteConstraints(129, 28, 239, -1));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Lista de Jugadores");
+        panelGeneral.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(167, 223, -1, -1));
 
         tablaJugadores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -160,12 +165,15 @@ public class Equipos extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaJugadores);
 
+        panelGeneral.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 246, 432, 241));
+
         jButton3.setText("Cancelar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
+        panelGeneral.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(267, 505, -1, -1));
 
         jButton4.setText("Guardar equipo");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -173,6 +181,7 @@ public class Equipos extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        panelGeneral.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(348, 505, -1, -1));
 
         opcionManual.setText("Manual");
         opcionManual.addActionListener(new java.awt.event.ActionListener() {
@@ -180,6 +189,7 @@ public class Equipos extends javax.swing.JFrame {
                 opcionManualActionPerformed(evt);
             }
         });
+        panelGeneral.add(opcionManual, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 97, -1, -1));
 
         opcionAutomatico.setText("Automático");
         opcionAutomatico.addActionListener(new java.awt.event.ActionListener() {
@@ -187,11 +197,14 @@ public class Equipos extends javax.swing.JFrame {
                 opcionAutomaticoActionPerformed(evt);
             }
         });
+        panelGeneral.add(opcionAutomatico, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 123, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("¿Desea añadir otro equipo?");
+        panelGeneral.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 75, -1, -1));
 
         jLabel3.setText("Equipos cargados:");
+        panelGeneral.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 31, -1, -1));
 
         botonSeleccionar.setText("Seleccionar archivo");
         botonSeleccionar.setEnabled(false);
@@ -200,9 +213,11 @@ public class Equipos extends javax.swing.JFrame {
                 botonSeleccionarActionPerformed(evt);
             }
         });
+        panelGeneral.add(botonSeleccionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 174, -1, -1));
 
         seleccionado.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         seleccionado.setText("Archivo seleccionado");
+        panelGeneral.add(seleccionado, new org.netbeans.lib.awtextra.AbsoluteConstraints(258, 178, -1, -1));
 
         botonSubir.setText("Subir");
         botonSubir.setEnabled(false);
@@ -211,8 +226,10 @@ public class Equipos extends javax.swing.JFrame {
                 botonSubirActionPerformed(evt);
             }
         });
+        panelGeneral.add(botonSubir, new org.netbeans.lib.awtextra.AbsoluteConstraints(197, 174, -1, -1));
 
         manualMessage.setText("Error/Success");
+        panelGeneral.add(manualMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 101, 355, -1));
 
         nombreEquipo.setText("Nombre del equipo");
         nombreEquipo.setEnabled(false);
@@ -240,86 +257,13 @@ public class Equipos extends javax.swing.JFrame {
                 nombreEquipoKeyReleased(evt);
             }
         });
+        panelGeneral.add(nombreEquipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 148, 192, -1));
 
         automaticMessage.setText("Error/Success");
+        panelGeneral.add(automaticMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 127, 347, -1));
 
-        javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
-        panelGeneral.setLayout(panelGeneralLayout);
-        panelGeneralLayout.setHorizontalGroup(
-            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelGeneralLayout.createSequentialGroup()
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelGeneralLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panelGeneralLayout.createSequentialGroup()
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4))
-                            .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(panelGeneralLayout.createSequentialGroup()
-                                    .addGap(144, 144, 144)
-                                    .addComponent(jLabel1))
-                                .addComponent(jLabel2)
-                                .addGroup(panelGeneralLayout.createSequentialGroup()
-                                    .addComponent(opcionManual)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(manualMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(panelGeneralLayout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(equiposCargados, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(panelGeneralLayout.createSequentialGroup()
-                                    .addComponent(opcionAutomatico)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(automaticMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(panelGeneralLayout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nombreEquipo)
-                            .addGroup(panelGeneralLayout.createSequentialGroup()
-                                .addComponent(botonSeleccionar)
-                                .addGap(10, 10, 10)
-                                .addComponent(botonSubir)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(seleccionado)))
-                .addContainerGap(48, Short.MAX_VALUE))
-        );
-        panelGeneralLayout.setVerticalGroup(
-            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelGeneralLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(equiposCargados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(27, 27, 27)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(opcionManual)
-                    .addComponent(manualMessage))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(opcionAutomatico)
-                    .addComponent(automaticMessage))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botonSeleccionar)
-                    .addComponent(seleccionado)
-                    .addComponent(botonSubir))
-                .addGap(18, 26, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addGap(25, 25, 25))
-        );
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javafootballboard/Assets/WhatsApp Image 2016-10-01 at 23.51.22.jpeg"))); // NOI18N
+        panelGeneral.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 550));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -607,6 +551,7 @@ public class Equipos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel manualMessage;
