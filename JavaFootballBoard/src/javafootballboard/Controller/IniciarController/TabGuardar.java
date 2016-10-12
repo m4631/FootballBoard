@@ -24,6 +24,7 @@ public class TabGuardar {
     
     public void mostrarDatosD(){
         Juego juego = iniciar.IC.crearJuego();
+        juego.setHoraFin(calcularHoraFin());
         iniciar.getJLTitulo().setText(juego.getTitulo());
         iniciar.getJLScore().setText("[ "+juego.getPuntosA()+" - "+juego.getPuntosB()+" ]");
         
@@ -63,5 +64,52 @@ public class TabGuardar {
             JOptionPane.showMessageDialog(iniciar, "Ha ocurrido un error al momento de guardar");
             return false;
         }
+    }
+    
+    public String calcularHoraFin(){
+        String horaFin = iniciar.IC.getHoraInicio();
+        String ultimaHora = iniciar.IC.tabJugadas.tiempoF;
+        
+        int h = Integer.parseInt(horaFin.substring(0, 2));
+        int m = Integer.parseInt(horaFin.substring(3, 5));
+        int s = Integer.parseInt(horaFin.substring(6, 8));
+        
+        int mm = Integer.parseInt(ultimaHora.substring(0, 2));
+        int ss = Integer.parseInt(ultimaHora.substring(3, 5));
+        
+        horaFin="";
+        int resultadoS = ss + s;
+        while(resultadoS>=60){
+            mm++;
+            resultadoS-=60;
+        }
+        
+        int resultadoM = m + mm;
+        while(resultadoM>=60){
+            h++;
+            resultadoM-=60;
+        }
+        
+        if(h>24){
+           horaFin = "00:";
+        }else if(h<10){
+           horaFin = "0"+h+":";
+        }else{
+            horaFin = h+":";
+        }
+       
+        if(resultadoM<10){
+            horaFin= horaFin+"0"+resultadoM+":";
+        }else{
+            horaFin= horaFin+resultadoM+":";
+        }
+        
+        if(resultadoS<10){
+            horaFin= horaFin+"0"+resultadoS;
+        }else{
+            horaFin= horaFin+Integer.toString(resultadoS);
+        }
+        System.out.println(h+" "+resultadoM+" "+resultadoS);
+        return horaFin;
     }
 }

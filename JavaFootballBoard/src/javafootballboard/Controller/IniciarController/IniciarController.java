@@ -6,6 +6,7 @@
 package javafootballboard.Controller.IniciarController;
 
 import java.awt.Image;
+import java.text.DateFormat;
 import javafootballboard.Controller.AbrirVistas;
 import javafootballboard.Controller.onlyDigitsListener;
 import javafootballboard.Controller.onlyLettersListener;
@@ -133,7 +134,27 @@ public class IniciarController {
     }
     
     public String getHoraInicio(){
-        return iniciar.getJHora1().getText()+":"+iniciar.getJMinuto1().getText()+":"+iniciar.getJSegundo1().getText();
+        String resultado;
+        
+        if(iniciar.getJHora1().getText().length()<2){
+            resultado = "0"+iniciar.getJHora1().getText()+":";
+        }else{
+            resultado = iniciar.getJHora1().getText()+":";
+        }
+        
+        if(iniciar.getJMinuto1().getText().length()<2){
+            resultado = resultado +"0"+iniciar.getJMinuto1().getText()+":";
+        }else{
+            resultado = resultado +iniciar.getJMinuto1().getText()+":";
+        }
+        
+        if(iniciar.getJSegundo1().getText().length()<2){
+            resultado = resultado +"0"+iniciar.getJSegundo1().getText();
+        }else{
+            resultado = resultado +iniciar.getJSegundo1().getText(); 
+         }
+         
+        return resultado;
     }
     
     public String getHoraFin(){
@@ -142,7 +163,8 @@ public class IniciarController {
     }
     
     public String getFecha(){
-        return iniciar.getJFecha().getDate().toString();
+        DateFormat  df = DateFormat.getDateInstance();
+        return df.format(iniciar.getJFecha().getDate()); 
     }
     
     public void cargarImagen(){

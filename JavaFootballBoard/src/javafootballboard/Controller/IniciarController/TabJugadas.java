@@ -24,6 +24,7 @@ public class TabJugadas {
     Cronometro cronometro;
     Thread hilo;
     String tiempo;
+    String tiempoF;
     
     ImageIcon gifGol;
     ImageIcon gifPase;
@@ -38,6 +39,7 @@ public class TabJugadas {
     public void acabarPartido() {
         if (iniciar.getAcabarPartido().getText().equals("Acabar partido")) {
             cronometro.pausar();
+            tiempoF = iniciar.getJTiempo().getText();
             // Calcular tiempo de fin del partido
             iniciar.getAcabarPartido().setText("Cancelar fin");
             iniciar.getGuardarTiempo().setEnabled(false);

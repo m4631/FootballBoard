@@ -98,7 +98,6 @@ public class TabJugadas {
         if(comprobarCamposC()){
             agregarJugada();
             subir.getJSiguienteC().setEnabled(true);
-            subir.SC.tabGuardar.mostrarDatosD();
         }
     }
     
