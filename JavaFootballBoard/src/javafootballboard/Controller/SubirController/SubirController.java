@@ -151,6 +151,8 @@ public class SubirController {
             return;
         }
         subirArchivo();
+        subir.SC.tabJugadas.actualizarPuntajes();
+        subir.SC.tabJugadas.actualizarTablaPuntaje();
     }
 
     public void cargarJugadas(int rows) {

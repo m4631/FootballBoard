@@ -325,7 +325,7 @@ public class Subir extends javax.swing.JFrame {
         jLabel4.setText("Ayuda: Añadir equipo le permite añadir un nuevo equipo a la base de datos por medio");
 
         jLabel5.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel5.setText("de un formulario de registros o subiendo un archivo .txt con los datos del equipo.");
+        jLabel5.setText("de un formulario de registros o subiendo un archivo .csv con los datos del equipo.");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);

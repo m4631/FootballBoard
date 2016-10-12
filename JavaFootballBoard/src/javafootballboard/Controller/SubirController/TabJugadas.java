@@ -5,6 +5,7 @@
  */
 package javafootballboard.Controller.SubirController;
 
+import java.util.ArrayList;
 import javafootballboard.Controller.dataArreglos;
 import javafootballboard.Model.DataLocal;
 import javafootballboard.Model.Equipo;
@@ -204,5 +205,18 @@ public class TabJugadas {
             nombreJugador = nombreJugador.concat(s);
         }
         return nombreJugador;
+    }
+    
+    public void actualizarPuntajes(){
+        ArrayList<Jugada> j = subir.SC.juego.getJugadas();
+        for(Jugada n: j){
+            if(n.getNombre().equalsIgnoreCase("gol")){
+                if(n.getEquipo().getNombre().equals(subir.SC.juego.getEquipoA().getNombre())){
+                    puntajeA++;
+                }else{
+                    puntajeB++;
+                }
+            }
+        }
     }
 }

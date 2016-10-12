@@ -161,7 +161,7 @@ public final class CargarArchivos {
                 Jugador jugador = DataLocal.getJugador(columnas[1]);
                 Equipo equipo = DataLocal.getEquipo(columnas[2], jugador);
                 
-                Jugada jugada = new Jugada(juego, columnas[1], jugador, equipo, columnas[3]);
+                Jugada jugada = new Jugada(juego, columnas[0], jugador, equipo, columnas[3]);
                 juego.agregarJugada(jugada);
                 DataLocal.jugadas.add(jugada);
                 System.out.println("JUGADA: " + jugada.getNombre() + " por " + jugada.getJugador() + " en " + jugada.getJuego().getTitulo());
