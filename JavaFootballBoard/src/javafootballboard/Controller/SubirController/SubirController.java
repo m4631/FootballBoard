@@ -146,6 +146,7 @@ public class SubirController {
             System.out.println("Opening: " + file.getName() + ".");
         } else {
             System.out.println("Open command cancelled by user.");
+            return;
         }
         subirArchivo();
     }
